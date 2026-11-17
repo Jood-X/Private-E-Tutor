@@ -1,0 +1,46 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 4
+
+[*.{json,yml,yaml,arb,xml,csproj,props,slnx}]
+indent_size = 2
+
+[*.dart]
+indent_size = 2
+
+[*.md]
+trim_trailing_whitespace = false
+
+[*.cs]
+# Style
+csharp_style_namespace_declarations = file_scoped:warning
+csharp_style_var_for_built_in_types = true:suggestion
+csharp_style_var_when_type_is_apparent = true:suggestion
+dotnet_sort_system_directives_first = true
+csharp_prefer_braces = true:warning
+dotnet_style_readonly_field = true:warning
+csharp_style_prefer_primary_constructors = true:suggestion
+
+# Analyzer rules that target reusable class libraries consumed from other .NET languages.
+# This is an application, so they add noise without value:
+# CA1716 - type names such as "Error" clash with VB keywords.
+dotnet_diagnostic.CA1716.severity = none
+# CA1000 - static factories on generic types (Result<T>.Success) are intentional.
+dotnet_diagnostic.CA1000.severity = none
+# CA1515 - "make types internal": ASP.NET Core and test discovery need public types.
+dotnet_diagnostic.CA1515.severity = none
+
+# Tests: method names use underscores (Method_State_Expectation); no ConfigureAwait needed.
+[backend/tests/**.cs]
+dotnet_diagnostic.CA1707.severity = none
+dotnet_diagnostic.CA2007.severity = none
+
+[**/Migrations/*.cs]
+generated_code = true
+dotnet_diagnostic.CA1861.severity = none

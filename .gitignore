@@ -1,0 +1,48 @@
+# ---- OS / editors ----
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.iml
+
+# ---- Secrets: never commit real configuration ----
+.env
+.env.*
+!.env.example
+*.pfx
+*.p12
+*.key
+appsettings.*.local.json
+backend/src/ETutor.Api/appsettings.Production.json
+
+# ---- .NET ----
+bin/
+obj/
+*.user
+*.suo
+.vs/
+TestResults/
+coverage*/
+backend/src/ETutor.Api/logs/
+
+# ---- Flutter / Dart ----
+mobile/.dart_tool/
+mobile/build/
+mobile/.flutter-plugins
+mobile/.flutter-plugins-dependencies
+mobile/coverage/
+mobile/lib/l10n/generated/
+mobile/android/.gradle/
+mobile/android/local.properties
+mobile/android/key.properties
+mobile/android/app/upload-keystore.jks
+mobile/ios/Pods/
+mobile/ios/.symlinks/
+mobile/ios/Flutter/Generated.xcconfig
+mobile/ios/Flutter/flutter_export_environment.sh
+
+# ---- Claude Code local state (launch.json is shared) ----
+.claude/*
+!.claude/launch.json

@@ -1,0 +1,54 @@
+name: etutor_app
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.7.2
+
+dependencies:
+  flutter_localizations:
+    sdk: flutter
+  dio: ^5.11.1
+  equatable: ^3.0.0
+  flutter:
+    sdk: flutter
+  flutter_bloc: ^9.1.1
+  get_it: ^9.3.0
+  go_router: ^17.0.0
+  intl: ^0.19.0
+  logging: ^1.3.0
+  shared_preferences: ^2.5.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  bloc_test: ^10.0.0
+  mocktail: ^1.0.5
+
+flutter:
+  uses-material-design: true
+  generate: true
+
+  # Bundled so text renders identically offline and on every platform (SIL Open Font License,
+  # see the OFL.txt next to each family). Family names must match AppTypography.
+  fonts:
+    - family: Figtree
+      fonts:
+        - asset: assets/fonts/figtree/Figtree-Regular.ttf
+        - asset: assets/fonts/figtree/Figtree-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/figtree/Figtree-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/figtree/Figtree-Bold.ttf
+          weight: 700
+    - family: IBM Plex Sans Arabic
+      fonts:
+        - asset: assets/fonts/ibm_plex_sans_arabic/IBMPlexSansArabic-Regular.ttf
+        - asset: assets/fonts/ibm_plex_sans_arabic/IBMPlexSansArabic-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/ibm_plex_sans_arabic/IBMPlexSansArabic-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/ibm_plex_sans_arabic/IBMPlexSansArabic-Bold.ttf
+          weight: 700

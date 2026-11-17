@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "api",
+      "runtimeExecutable": "dotnet",
+      "runtimeArgs": ["run", "--project", "backend/src/ETutor.Api", "--launch-profile", "http"],
+      "port": 5258
+    },
+    {
+      "name": "mobile-web",
+      "runtimeExecutable": "powershell",
+      "runtimeArgs": ["-NoProfile", "-Command", "Set-Location mobile; flutter run -d web-server --web-port 8686 --dart-define=API_BASE_URL=http://localhost:5258"],
+      "port": 8686
+    }
+  ]
+}

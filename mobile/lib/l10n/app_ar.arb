@@ -1,0 +1,33 @@
+{
+  "@@locale": "ar",
+
+  "commonRetry": "حاول مرة أخرى",
+  "commonContinue": "متابعة",
+  "commonBack": "رجوع",
+  "commonLoading": "جارٍ التحميل",
+  "commonSettings": "الإعدادات",
+  "commonErrorReference": "المرجع: {traceId}",
+
+  "errorNetwork": "تعذّر الوصول إلى الخادم. تحقّق من اتصالك بالإنترنت وحاول مرة أخرى.",
+  "errorTimeout": "يستغرق الخادم وقتًا طويلًا للرد. يُرجى المحاولة مرة أخرى.",
+  "errorServer": "حدث خطأ من جهتنا. يُرجى المحاولة بعد قليل.",
+  "errorRateLimited": "لقد كرّرت هذا الإجراء كثيرًا. انتظر قليلًا ثم حاول مرة أخرى.",
+  "errorNotFound": "لم نعثر على ما تبحث عنه.",
+  "errorUnexpected": "حدث خطأ ما. يُرجى المحاولة مرة أخرى.",
+  "errorCountryNotFound": "هذه الدولة غير متاحة بعد.",
+  "errorCurriculumNotFound": "هذا المنهاج غير متاح.",
+
+  "settingsLanguage": "اللغة",
+  "settingsLanguageHint": "يتبع تخطيط التطبيق اللغة التي تختارها.",
+
+  "onboardingStep": "الخطوة {current} من {total}",
+  "onboardingCurriculumTitle": "ماذا تدرس؟",
+  "onboardingCurriculumSubtitle": "سنعرض لك المعلمين والمساقات المناسبة لمنهاجك. يمكنك تغيير ذلك لاحقًا.",
+  "onboardingCountryLabel": "الدولة",
+  "onboardingCurriculumLabel": "المنهاج",
+  "onboardingSelectCountryFirst": "اختر دولتك لعرض المناهج المتاحة فيها.",
+  "onboardingNoCurricula": "لا توجد مناهج متاحة في هذه الدولة بعد.",
+  "onboardingHasStreams": "يتضمن فروعًا",
+  "onboardingSignUpComingSoon": "إنشاء الحساب هو الخطوة التالية، وسيتوفر قريبًا.",
+  "onboardingSelected": "محدّد"
+}
