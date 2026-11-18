@@ -19,7 +19,12 @@ public class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
     private const string DefaultConnectionString =
         @"Server=(localdb)\MSSQLLocalDB;Database=ETutor_IntegrationTests;Trusted_Connection=True;TrustServerCertificate=True";
 
+    /// <summary>Test-only key (never used outside the test host).</summary>
+    public const string TestSigningKey = "integration-tests-signing-key-0123456789-abcdef";
+
     protected virtual int RateLimitPermits => 10_000;
+
+    protected virtual int AuthRateLimitPermits => 10_000;
 
     public virtual async Task InitializeAsync()
     {
@@ -38,6 +43,8 @@ public class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
             Environment.GetEnvironmentVariable("ETUTOR_TEST_DB") ?? DefaultConnectionString);
         builder.UseSetting("RateLimiting:PermitLimit", RateLimitPermits.ToString(System.Globalization.CultureInfo.InvariantCulture));
         builder.UseSetting("RateLimiting:WindowSeconds", "60");
+        builder.UseSetting("RateLimiting:AuthPermitLimit", AuthRateLimitPermits.ToString(System.Globalization.CultureInfo.InvariantCulture));
+        builder.UseSetting("Jwt:SigningKey", TestSigningKey);
         builder.UseSetting("Serilog:MinimumLevel:Default", "Warning");
         builder.ConfigureTestServices(services =>
             services.AddControllers().AddApplicationPart(typeof(TestOnlyController).Assembly));

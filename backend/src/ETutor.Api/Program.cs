@@ -24,6 +24,13 @@ try
         .AddApiServices(builder.Configuration);
 
     var app = builder.Build();
+
+    if (args.Contains(DevSeedCommand.Name, StringComparer.Ordinal))
+    {
+        await DevSeedCommand.RunAsync(app);
+        return;
+    }
+
     app.UseApiPipeline();
     await app.RunAsync();
 }

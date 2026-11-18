@@ -1,5 +1,8 @@
 using ETutor.Application.Abstractions;
+using ETutor.Infrastructure.Identity;
 using ETutor.Infrastructure.Persistence;
+using ETutor.Infrastructure.Persistence.Seed;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,13 +23,46 @@ public static class DependencyInjection
                 "Set ConnectionStrings__Database (see docs/setup.md).");
         }
 
-        services.AddDbContext<AppDbContext>(options => options.UseSqlServer(
-            connectionString,
-            sql => sql.EnableRetryOnFailure()));
-        services.AddScoped<IAppDbContext>(provider => provider.GetRequiredService<AppDbContext>());
-
         services.AddSingleton(TimeProvider.System);
         services.AddSingleton<IClock, SystemClock>();
+        services.AddScoped<AuditingInterceptor>();
+
+        services.AddDbContext<AppDbContext>((provider, options) => options
+            .UseSqlServer(connectionString, sql => sql.EnableRetryOnFailure())
+            .AddInterceptors(provider.GetRequiredService<AuditingInterceptor>()));
+        services.AddScoped<IAppDbContext>(provider => provider.GetRequiredService<AppDbContext>());
+
+        services.AddIdentityInfrastructure(configuration);
+        services.AddScoped<DevDataSeeder>();
         return services;
+    }
+
+    private static void AddIdentityInfrastructure(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddIdentityCore<ApplicationUser>(options =>
+            {
+                options.User.RequireUniqueEmail = true;
+
+                options.Password.RequiredLength = 8;
+                options.Password.RequireDigit = true;
+                options.Password.RequireLowercase = true;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequiredUniqueChars = 4;
+
+                options.Lockout.AllowedForNewUsers = true;
+                options.Lockout.MaxFailedAccessAttempts = 5;
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+            })
+            .AddRoles<IdentityRole<Guid>>()
+            .AddEntityFrameworkStores<AppDbContext>();
+
+        services.AddOptions<JwtOptions>()
+            .Bind(configuration.GetSection(JwtOptions.SectionName))
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
+
+        services.AddScoped<IIdentityService, IdentityService>();
+        services.AddSingleton<ITokenService, TokenService>();
     }
 }

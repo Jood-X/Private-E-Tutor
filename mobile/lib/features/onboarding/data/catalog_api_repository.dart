@@ -20,6 +20,21 @@ class CatalogApiRepository implements CatalogRepository {
     (data) => _list(data, _curriculum),
   );
 
+  @override
+  Future<ApiResult<List<CatalogItem>>> getGradeLevels(int curriculumId) =>
+      _client.get('$_base/curricula/$curriculumId/grade-levels', (data) => _list(data, _item));
+
+  @override
+  Future<ApiResult<List<CatalogItem>>> getStreams(int curriculumId) =>
+      _client.get('$_base/curricula/$curriculumId/streams', (data) => _list(data, _item));
+
+  @override
+  Future<ApiResult<List<CatalogItem>>> getSubjects(int gradeLevelId) =>
+      _client.get('$_base/grade-levels/$gradeLevelId/subjects', (data) => _list(data, _item));
+
+  static CatalogItem _item(Map<String, dynamic> json) =>
+      CatalogItem(id: json['id'] as int, code: json['code'] as String, name: json['name'] as String);
+
   static List<T> _list<T>(Object? data, T Function(Map<String, dynamic>) decode) =>
       (data! as List<Object?>).cast<Map<String, dynamic>>().map(decode).toList(growable: false);
 

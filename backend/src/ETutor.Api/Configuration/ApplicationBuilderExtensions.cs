@@ -30,16 +30,18 @@ internal static class ApplicationBuilderExtensions
 
         app.UseRequestLocalization();
         app.UseCors(ServiceCollectionExtensions.CorsPolicyName);
+        app.UseAuthentication();
         app.UseRateLimiter();
         app.UseAuthorization();
 
+        // Authorization is deny-by-default (fallback policy); public endpoints opt out explicitly.
         app.MapControllers();
-        app.MapHealthChecks("/health");
+        app.MapHealthChecks("/health").AllowAnonymous();
 
         if (app.Environment.IsDevelopment())
         {
             var productName = app.Services.GetRequiredService<IOptions<BrandingOptions>>().Value.ProductName;
-            app.MapOpenApi();
+            app.MapOpenApi().AllowAnonymous();
             app.UseSwaggerUI(options =>
             {
                 options.SwaggerEndpoint("/openapi/v1.json", $"{productName} API v1");

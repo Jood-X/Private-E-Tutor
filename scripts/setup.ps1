@@ -23,6 +23,20 @@ Invoke-Step 'Restoring backend packages and tools' {
     try { dotnet tool restore; dotnet restore } finally { Pop-Location }
 }
 
+Invoke-Step 'Ensuring a local JWT signing key (stored in user-secrets, never in the repo)' {
+    $existing = dotnet user-secrets list --project $ApiProject 2>$null | Select-String -SimpleMatch 'Jwt:SigningKey'
+    if (-not $existing) {
+        $bytes = New-Object byte[] 48
+        [System.Security.Cryptography.RandomNumberGenerator]::Fill($bytes)
+        $key = [Convert]::ToBase64String($bytes)
+        dotnet user-secrets set 'Jwt:SigningKey' $key --project $ApiProject | Out-Null
+        Write-Host '    Created a new random development signing key.'
+    }
+    else {
+        Write-Host '    Signing key already configured.'
+    }
+}
+
 Invoke-Step 'Creating/updating the local database (migrations + reference data)' {
     Invoke-Ef @('database', 'update')
 }

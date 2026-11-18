@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ETutor.IntegrationTests.Infrastructure;
 
 /// <summary>Endpoints that exist only inside the test host to exercise cross-cutting behavior.</summary>
+[Microsoft.AspNetCore.Authorization.AllowAnonymous]
 [Route("api/v1/test-only")]
 public sealed class TestOnlyController : ApiControllerBase
 {

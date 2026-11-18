@@ -24,3 +24,15 @@ class Curriculum extends Equatable {
   @override
   List<Object?> get props => [id, code, name, hasStreams];
 }
+
+/// A named catalog item (grade level, stream or subject); names arrive localized.
+class CatalogItem extends Equatable {
+  const CatalogItem({required this.id, required this.code, required this.name});
+
+  final int id;
+  final String code;
+  final String name;
+
+  @override
+  List<Object?> get props => [id, code, name];
+}

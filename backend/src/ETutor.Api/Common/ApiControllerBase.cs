@@ -17,12 +17,14 @@ public abstract class ApiControllerBase : ControllerBase
     protected ActionResult<ApiResponse<T>> OkResponse<T>(T data) =>
         Ok(ApiResponse.Ok(data, HttpContext.GetTraceId()));
 
-    protected ActionResult<ApiResponse<T>> FromResult<T>(Result<T> result)
+    /// <param name="result">The use-case outcome.</param>
+    /// <param name="successStatusCode">200 by default; 201 for endpoints that create a resource.</param>
+    protected ActionResult<ApiResponse<T>> FromResult<T>(Result<T> result, int successStatusCode = StatusCodes.Status200OK)
     {
         ArgumentNullException.ThrowIfNull(result);
         if (result.IsSuccess)
         {
-            return OkResponse(result.Value);
+            return StatusCode(successStatusCode, ApiResponse.Ok(result.Value, HttpContext.GetTraceId()));
         }
 
         var firstError = result.Errors[0];

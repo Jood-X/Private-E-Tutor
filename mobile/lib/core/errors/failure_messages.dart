@@ -5,26 +5,40 @@ import '../api/api_failure.dart';
 /// Known server error codes win; otherwise the failure kind decides. Raw server
 /// messages are never shown to users.
 extension FailureMessages on ApiFailure {
-  String localizedMessage(AppLocalizations l10n) {
-    final byCode = switch (code) {
-      'catalog.country_not_found' => l10n.errorCountryNotFound,
-      'catalog.curriculum_not_found' => l10n.errorCurriculumNotFound,
-      _ => null,
-    };
-    if (byCode != null) {
-      return byCode;
-    }
-
-    return switch (kind) {
-      ApiFailureKind.network => l10n.errorNetwork,
-      ApiFailureKind.timeout => l10n.errorTimeout,
-      ApiFailureKind.rateLimited => l10n.errorRateLimited,
-      ApiFailureKind.notFound => l10n.errorNotFound,
-      ApiFailureKind.server || ApiFailureKind.invalidResponse => l10n.errorServer,
-      _ => l10n.errorUnexpected,
-    };
-  }
+  String localizedMessage(AppLocalizations l10n) =>
+      messageForCode(code, l10n) ??
+      switch (kind) {
+        ApiFailureKind.network => l10n.errorNetwork,
+        ApiFailureKind.timeout => l10n.errorTimeout,
+        ApiFailureKind.rateLimited => l10n.errorRateLimited,
+        ApiFailureKind.notFound => l10n.errorNotFound,
+        ApiFailureKind.server || ApiFailureKind.invalidResponse => l10n.errorServer,
+        _ => l10n.errorUnexpected,
+      };
 
   /// "Reference: `traceId`" when the server identified the request, otherwise `null`.
   String? localizedReference(AppLocalizations l10n) => traceId == null ? null : l10n.commonErrorReference(traceId!);
+
+  /// Localized messages for errors attached to one input field, keyed by the field's API name.
+  Map<String, String> localizedFieldErrors(AppLocalizations l10n) => {
+    for (final error in errors)
+      if (error.field case final field? when field.isNotEmpty)
+        field: messageForCode(error.code, l10n) ?? l10n.errorUnexpected,
+  };
 }
+
+/// Messages for stable server error codes (docs/api-conventions.md). Unknown codes return null.
+String? messageForCode(String? code, AppLocalizations l10n) => switch (code) {
+  'catalog.country_not_found' => l10n.errorCountryNotFound,
+  'catalog.curriculum_not_found' => l10n.errorCurriculumNotFound,
+  'auth.invalid_credentials' => l10n.errorInvalidCredentials,
+  'auth.locked_out' => l10n.errorLockedOut,
+  'auth.email_taken' => l10n.errorEmailTaken,
+  'auth.weak_password' => l10n.errorWeakPassword,
+  'auth.invalid_refresh_token' => l10n.errorSessionExpired,
+  'profile.curriculum_not_available' ||
+  'profile.grade_not_in_curriculum' ||
+  'profile.stream_not_in_curriculum' ||
+  'profile.subject_not_in_grade' => l10n.errorStudyPlanInvalid,
+  _ => null,
+};

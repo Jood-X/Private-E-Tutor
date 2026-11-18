@@ -40,3 +40,14 @@ or personal data beyond opaque IDs. The request logger records the path without 
   Severe logs go to `ErrorReporter`. Today that's console-only; a crash-reporting service can implement the
   interface later without changing callers.
 * Users see localized messages (`core/errors/failure_messages.dart`), never raw server or exception text.
+
+## Backend account and session events (2000–2099)
+
+| EventId | Name | Level |
+|---|---|---|
+| 2000 | `auth.registered` | Information (user ID, role) |
+| 2001 | `auth.login.succeeded` | Information (user ID) |
+| 2002 | `auth.login.failed` | Warning (error code only, never the email) |
+| 2003 | `auth.refresh.reuse_detected` | Warning (user ID, token family) |
+| 2004 | `auth.refresh.rejected` | Information (reason) |
+| 2005 | `auth.logout` | Information (token family) |

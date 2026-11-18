@@ -1,9 +1,10 @@
 import 'package:equatable/equatable.dart';
 
 import '../../../core/api/api_failure.dart';
+import '../../../core/state/load_status.dart';
 import '../models/catalog_models.dart';
 
-enum LoadStatus { idle, loading, loaded, failed }
+export '../../../core/state/load_status.dart';
 
 /// Immutable state of the curriculum-selection step.
 class CurriculumSelectionState extends Equatable {

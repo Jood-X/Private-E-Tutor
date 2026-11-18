@@ -29,4 +29,8 @@ public sealed class RateLimitingOptions
 
     [Range(1, 3600)]
     public int WindowSeconds { get; init; }
+
+    /// <summary>Per-client limit for credential endpoints (sign-in, registration, refresh) per window.</summary>
+    [Range(1, 100_000)]
+    public int AuthPermitLimit { get; init; }
 }

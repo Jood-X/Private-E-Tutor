@@ -10,9 +10,9 @@ namespace ETutor.IntegrationTests.Conventions;
 public sealed class ApiConventionsTests(ApiFactory factory)
 {
     [Fact]
-    public async Task UnknownRoute_Returns404Envelope()
+    public async Task UnknownRoute_ForSignedInUser_Returns404Envelope()
     {
-        var response = await factory.CreateClient().GetAsync("/api/v1/does-not-exist");
+        var response = await (await SignedInClientAsync()).GetAsync("/api/v1/does-not-exist");
 
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         var envelope = await response.ReadEnvelopeAsync<object>();
@@ -21,9 +21,19 @@ public sealed class ApiConventionsTests(ApiFactory factory)
     }
 
     [Fact]
-    public async Task WrongMethod_Returns405Envelope()
+    public async Task UnknownRoute_ForAnonymousCaller_Returns401_SoRoutesAreNotDiscoverable()
     {
-        var response = await factory.CreateClient().DeleteAsync("/api/v1/catalog/countries");
+        // Authorization is deny-by-default: without a token, anything that is not explicitly public is 401.
+        var response = await factory.CreateClient().GetAsync("/api/v1/does-not-exist");
+
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        Assert.Equal("common.unauthorized", (await response.ReadEnvelopeAsync<object>()).Errors![0].Code);
+    }
+
+    [Fact]
+    public async Task WrongMethod_ForSignedInUser_Returns405Envelope()
+    {
+        var response = await (await SignedInClientAsync()).DeleteAsync("/api/v1/catalog/countries");
 
         Assert.Equal(HttpStatusCode.MethodNotAllowed, response.StatusCode);
         Assert.Equal("common.method_not_allowed", (await response.ReadEnvelopeAsync<object>()).Errors![0].Code);
@@ -99,5 +109,11 @@ public sealed class ApiConventionsTests(ApiFactory factory)
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.Equal("Healthy", await response.Content.ReadAsStringAsync());
+    }
+
+    private async Task<HttpClient> SignedInClientAsync()
+    {
+        var auth = await Users.AuthClient.RegisterStudentAsync(factory.CreateClient());
+        return Users.AuthClient.Authorized(factory, auth.AccessToken);
     }
 }

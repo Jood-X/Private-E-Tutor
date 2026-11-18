@@ -8,6 +8,7 @@ import '../core/config/app_config.dart';
 import '../core/logging/app_bloc_observer.dart';
 import '../core/logging/app_logger.dart';
 import '../core/logging/error_reporter.dart';
+import '../features/auth/controllers/session_cubit.dart';
 import '../features/settings/controllers/language_cubit.dart';
 import 'app.dart';
 import 'dependencies.dart';
@@ -36,5 +37,9 @@ Future<void> bootstrap() async {
 
   final locator = await configureDependencies(AppConfig.fromEnvironment());
   log.info('Starting');
-  runApp(EtutorApp(languageCubit: locator<LanguageCubit>(), router: buildRouter(locator)));
+  final session = locator<SessionCubit>();
+  runApp(EtutorApp(languageCubit: locator<LanguageCubit>(), sessionCubit: session, router: buildRouter(locator)));
+
+  // Restore after the first frame so the splash screen is visible while the saved session is checked.
+  unawaited(session.restore());
 }

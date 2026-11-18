@@ -4,6 +4,7 @@ using System.Threading.RateLimiting;
 using ETutor.Api.ErrorHandling;
 using ETutor.Api.Localization;
 using ETutor.Api.Logging;
+using ETutor.Api.Security;
 using ETutor.Application.Abstractions;
 using ETutor.Application.Common;
 using ETutor.Domain.Common;
@@ -17,6 +18,7 @@ namespace ETutor.Api.Configuration;
 internal static class ServiceCollectionExtensions
 {
     public const string CorsPolicyName = "AllowedClients";
+    public const string AuthRateLimitPolicy = "auth";
 
     public static IServiceCollection AddApiServices(this IServiceCollection services, IConfiguration configuration)
     {
@@ -43,16 +45,21 @@ internal static class ServiceCollectionExtensions
 
         services.AddApiCors(configuration);
         services.AddApiRateLimiting();
-        services.AddOpenApi(options => options.AddDocumentTransformer((document, context, _) =>
+        services.AddApiAuthentication();
+        services.AddOpenApi(options =>
         {
-            var branding = context.ApplicationServices.GetRequiredService<IOptions<BrandingOptions>>().Value;
-            document.Info.Title = $"{branding.ProductName} API";
-            document.Info.Version = "v1";
-            document.Info.Description =
-                "Every JSON response uses the envelope { success, message, data, errors, traceId }. " +
-                "Errors carry stable codes for client localization. Send Accept-Language: en | ar.";
-            return Task.CompletedTask;
-        }));
+            options.AddDocumentTransformer((document, context, _) =>
+            {
+                var branding = context.ApplicationServices.GetRequiredService<IOptions<BrandingOptions>>().Value;
+                document.Info.Title = $"{branding.ProductName} API";
+                document.Info.Version = "v1";
+                document.Info.Description =
+                    "Every JSON response uses the envelope { success, message, data, errors, traceId }. " +
+                    "Errors carry stable codes for client localization. Send Accept-Language: en | ar.";
+                return Task.CompletedTask;
+            });
+            options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
+        });
         services.AddHealthChecks().AddDbContextCheck<AppDbContext>("database");
         return services;
     }
@@ -85,6 +92,20 @@ internal static class ServiceCollectionExtensions
                 return RateLimitPartition.GetFixedWindowLimiter(clientKey, _ => new FixedWindowRateLimiterOptions
                 {
                     PermitLimit = limits.PermitLimit,
+                    Window = TimeSpan.FromSeconds(limits.WindowSeconds),
+                    QueueLimit = 0,
+                });
+            });
+
+            // Stricter limit for credential endpoints (sign-in, registration, refresh), applied in
+            // addition to the global one, to slow down password guessing and account creation abuse.
+            options.AddPolicy(AuthRateLimitPolicy, context =>
+            {
+                var limits = context.RequestServices.GetRequiredService<IOptions<RateLimitingOptions>>().Value;
+                var clientKey = context.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+                return RateLimitPartition.GetFixedWindowLimiter(clientKey, _ => new FixedWindowRateLimiterOptions
+                {
+                    PermitLimit = limits.AuthPermitLimit,
                     Window = TimeSpan.FromSeconds(limits.WindowSeconds),
                     QueueLimit = 0,
                 });

@@ -53,11 +53,11 @@ localized messages**; codes are never renamed once published. They're defined in
 | Status | When | Example codes |
 |---|---|---|
 | 400 | Invalid input (one error per field, `field` in camelCase) | `common.validation_failed`, `catalog.invalid_country_code` |
-| 401 | Not authenticated | `common.unauthorized` |
+| 401 | Not authenticated, bad credentials, expired session | `common.unauthorized`, `auth.invalid_credentials`, `auth.locked_out`, `auth.invalid_refresh_token` |
 | 403 | Authenticated but not allowed | `common.forbidden` |
 | 404 | Not found, **or exists but belongs to someone else** (prevents ID probing) | `common.not_found`, `catalog.country_not_found` |
 | 405 | Wrong HTTP method | `common.method_not_allowed` |
-| 409 | Conflict / concurrent modification | (booking, enrollment: later phases) |
+| 409 | Conflict / concurrent modification | `auth.email_taken` |
 | 422 | Valid input that breaks a business rule | (later phases) |
 | 429 | Rate limited (`Retry-After` header set) | `common.rate_limited` |
 | 500 | Unexpected failure. Generic message only; no exception text, stack trace or SQL. | `common.unexpected` |
@@ -82,3 +82,19 @@ localized messages**; codes are never renamed once published. They're defined in
 | GET | `/api/v1/catalog/curricula/{id}/academic-years` | public | Academic years, newest first |
 | GET | `/api/v1/catalog/grade-levels/{id}/subjects` | public | Subjects taught at a grade level |
 | GET | `/health` | public | Liveness + database connectivity |
+| POST | `/api/v1/auth/register/student` | public, auth rate limit | Create a student account + study plan; returns tokens and profile (201) |
+| POST | `/api/v1/auth/register/teacher` | public, auth rate limit | Create a teacher account (verification Pending); returns tokens and profile (201) |
+| POST | `/api/v1/auth/login` | public, auth rate limit | Email + password; returns tokens and profile |
+| POST | `/api/v1/auth/refresh` | public, auth rate limit | Exchange a refresh token (single-use) for a new pair |
+| POST | `/api/v1/auth/logout` | public, auth rate limit | Revoke the session that owns the refresh token (204, also for unknown tokens) |
+| GET | `/api/v1/me` | signed in | The caller's own profile (`MeDto`) |
+| PUT | `/api/v1/me` | signed in | Update name, language, time zone, country |
+| PUT | `/api/v1/me/student` | Student role | Replace the study plan (curriculum, grade, stream, subjects) |
+| PUT | `/api/v1/me/teacher` | Teacher role | Update headline, bio, accepting-students flag |
+
+### Authentication
+
+Send `Authorization: Bearer <accessToken>`. Access tokens expire after 15 minutes. Exchange the refresh token
+at `/auth/refresh` (each refresh token works **once**; a replayed one signs the session out everywhere it was
+used). Authorization is deny-by-default: without a valid token every non-public endpoint, and any unknown
+route, answers **401** with `common.unauthorized`. A valid token without the right role gets **403**.

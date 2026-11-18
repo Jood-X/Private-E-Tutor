@@ -7,4 +7,10 @@ abstract interface class CatalogRepository {
   Future<ApiResult<List<Country>>> getCountries();
 
   Future<ApiResult<List<Curriculum>>> getCurricula(String countryIsoCode);
+
+  Future<ApiResult<List<CatalogItem>>> getGradeLevels(int curriculumId);
+
+  Future<ApiResult<List<CatalogItem>>> getStreams(int curriculumId);
+
+  Future<ApiResult<List<CatalogItem>>> getSubjects(int gradeLevelId);
 }

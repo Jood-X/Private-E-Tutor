@@ -9,6 +9,12 @@ const tawjihi = Curriculum(id: 1, code: 'jo-tawjihi', name: 'Jordanian Tawjihi',
 const cambridge = Curriculum(id: 8, code: 'cambridge', name: 'Cambridge IGCSE / A Level', hasStreams: false);
 const uaeMoe = Curriculum(id: 3, code: 'ae-moe', name: 'UAE Ministry of Education', hasStreams: false);
 
+const grade11 = CatalogItem(id: 111, code: 'g11', name: 'Grade 11');
+const grade12 = CatalogItem(id: 112, code: 'g12', name: 'Grade 12');
+const scientific = CatalogItem(id: 1, code: 'scientific', name: 'Scientific');
+const mathematics = CatalogItem(id: 1, code: 'mathematics', name: 'Mathematics');
+const physics = CatalogItem(id: 2, code: 'physics', name: 'Physics');
+
 const networkFailure = ApiFailure(kind: ApiFailureKind.network);
 const serverFailure = ApiFailure(kind: ApiFailureKind.server, statusCode: 500, traceId: 'trace-123');
 
@@ -33,4 +39,14 @@ class FakeCatalogRepository implements CatalogRepository {
     curriculaCalls.add(countryIsoCode);
     return curriculaResults[countryIsoCode] ?? const ApiError(ApiFailure(kind: ApiFailureKind.notFound));
   }
+
+  @override
+  Future<ApiResult<List<CatalogItem>>> getGradeLevels(int curriculumId) async => const ApiSuccess([grade11, grade12]);
+
+  @override
+  Future<ApiResult<List<CatalogItem>>> getStreams(int curriculumId) async =>
+      ApiSuccess(curriculumId == tawjihi.id ? const [scientific] : const <CatalogItem>[]);
+
+  @override
+  Future<ApiResult<List<CatalogItem>>> getSubjects(int gradeLevelId) async => const ApiSuccess([mathematics, physics]);
 }

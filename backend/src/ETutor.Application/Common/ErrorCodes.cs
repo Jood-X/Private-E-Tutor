@@ -18,6 +18,26 @@ public static class ErrorCodes
         public const string Unexpected = "common.unexpected";
     }
 
+    public static class Auth
+    {
+        public const string EmailTaken = "auth.email_taken";
+        public const string WeakPassword = "auth.weak_password";
+        public const string InvalidCredentials = "auth.invalid_credentials";
+        public const string LockedOut = "auth.locked_out";
+        public const string InvalidRefreshToken = "auth.invalid_refresh_token";
+    }
+
+    public static class Profile
+    {
+        public const string NotFound = "profile.not_found";
+        public const string NotAStudent = "profile.not_a_student";
+        public const string NotATeacher = "profile.not_a_teacher";
+        public const string CurriculumNotAvailable = "profile.curriculum_not_available";
+        public const string GradeNotInCurriculum = "profile.grade_not_in_curriculum";
+        public const string StreamNotInCurriculum = "profile.stream_not_in_curriculum";
+        public const string SubjectNotInGrade = "profile.subject_not_in_grade";
+    }
+
     public static class Catalog
     {
         public const string InvalidCountryCode = "catalog.invalid_country_code";

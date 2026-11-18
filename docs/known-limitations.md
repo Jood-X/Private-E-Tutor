@@ -12,6 +12,10 @@ Updated at the end of every phase. Items move to "Resolved" with the phase that 
 | L5 | Eastern Arabic digits | No number formatting exists yet. The Western-digits default (D15) and its setting will be implemented with the first numeric UI (Phase 3). | Phase 3 |
 | L6 | Platforms | Verified on the Android 15 emulator and Flutter web. Not yet on a physical Android device; iOS needs macOS to build. | iOS later |
 | L7 | Rate limiting | Per-IP partitioning is wrong behind a proxy unless forwarded headers are configured. | Deployment phase |
+| L8 | Accounts | No email verification and no password reset (needs an email provider). | Decision D21 |
+| L9 | Profile | The app shows the profile but has no edit screens yet; the API (`PUT /me`, `/me/student`, `/me/teacher`) is implemented and tested. Changing the language in Settings is not yet saved to the server profile. | Phase 3 |
+| L10 | Teachers | Teacher verification has no admin screen; set `TeacherProfiles.VerificationStatus = 1` with SQL or use `seed-dev` accounts. | Admin tooling later |
+| L11 | Mobile logs | On Android, flutter_secure_storage 10 logs `EncryptedSharedPreferences initialization failed … Falling back to custom ciphers` at startup (legacy-format check). Harmless: tokens are stored and read correctly. | Watch library updates |
 
 ## Resolved
 

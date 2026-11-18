@@ -1,65 +1,323 @@
 {
   "@@locale": "en",
-
   "commonRetry": "Try again",
-  "@commonRetry": { "description": "Button that repeats a failed action." },
+  "@commonRetry": {
+    "description": "Button that repeats a failed action."
+  },
   "commonContinue": "Continue",
-  "@commonContinue": { "description": "Primary button that moves to the next step." },
+  "@commonContinue": {
+    "description": "Primary button that moves to the next step."
+  },
   "commonBack": "Back",
-  "@commonBack": { "description": "Accessibility label for the back button." },
+  "@commonBack": {
+    "description": "Accessibility label for the back button."
+  },
   "commonLoading": "Loading",
-  "@commonLoading": { "description": "Screen-reader announcement while content loads." },
+  "@commonLoading": {
+    "description": "Screen-reader announcement while content loads."
+  },
   "commonSettings": "Settings",
-  "@commonSettings": { "description": "Title of the settings screen and label of its entry point." },
+  "@commonSettings": {
+    "description": "Title of the settings screen and label of its entry point."
+  },
   "commonErrorReference": "Reference: {traceId}",
   "@commonErrorReference": {
     "description": "Support reference shown under an error so the user can quote it.",
-    "placeholders": { "traceId": { "type": "String", "example": "9e936a89" } }
+    "placeholders": {
+      "traceId": {
+        "type": "String",
+        "example": "9e936a89"
+      }
+    }
   },
-
   "errorNetwork": "We can't reach the server. Check your internet connection and try again.",
-  "@errorNetwork": { "description": "Shown when no connection to the server can be made: device offline, server down or unreachable." },
+  "@errorNetwork": {
+    "description": "Shown when no connection to the server can be made: device offline, server down or unreachable."
+  },
   "errorTimeout": "The server is taking too long to respond. Please try again.",
-  "@errorTimeout": { "description": "Shown when a request times out." },
+  "@errorTimeout": {
+    "description": "Shown when a request times out."
+  },
   "errorServer": "Something went wrong on our side. Please try again in a moment.",
-  "@errorServer": { "description": "Shown for unexpected server errors (5xx)." },
+  "@errorServer": {
+    "description": "Shown for unexpected server errors (5xx)."
+  },
   "errorRateLimited": "You're doing that too often. Please wait a moment and try again.",
-  "@errorRateLimited": { "description": "Shown when the server rate-limits the client." },
+  "@errorRateLimited": {
+    "description": "Shown when the server rate-limits the client."
+  },
   "errorNotFound": "We couldn't find what you were looking for.",
-  "@errorNotFound": { "description": "Generic not-found message." },
+  "@errorNotFound": {
+    "description": "Generic not-found message."
+  },
   "errorUnexpected": "Something went wrong. Please try again.",
-  "@errorUnexpected": { "description": "Fallback message for any other failure." },
+  "@errorUnexpected": {
+    "description": "Fallback message for any other failure."
+  },
   "errorCountryNotFound": "This country isn't available yet.",
-  "@errorCountryNotFound": { "description": "Server error code catalog.country_not_found." },
+  "@errorCountryNotFound": {
+    "description": "Server error code catalog.country_not_found."
+  },
   "errorCurriculumNotFound": "This curriculum isn't available.",
-  "@errorCurriculumNotFound": { "description": "Server error code catalog.curriculum_not_found." },
-
+  "@errorCurriculumNotFound": {
+    "description": "Server error code catalog.curriculum_not_found."
+  },
   "settingsLanguage": "Language",
-  "@settingsLanguage": { "description": "Section title for choosing the app language." },
+  "@settingsLanguage": {
+    "description": "Section title for choosing the app language."
+  },
   "settingsLanguageHint": "The app layout follows the language you choose.",
-  "@settingsLanguageHint": { "description": "Helper text under the language options." },
-
+  "@settingsLanguageHint": {
+    "description": "Helper text under the language options."
+  },
   "onboardingStep": "Step {current} of {total}",
   "@onboardingStep": {
     "description": "Progress label in the onboarding flow.",
-    "placeholders": { "current": { "type": "int" }, "total": { "type": "int" } }
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
   },
   "onboardingCurriculumTitle": "What are you studying?",
-  "@onboardingCurriculumTitle": { "description": "Headline of the curriculum selection step." },
+  "@onboardingCurriculumTitle": {
+    "description": "Headline of the curriculum selection step."
+  },
   "onboardingCurriculumSubtitle": "We'll show teachers and courses that match your curriculum. You can change this later.",
-  "@onboardingCurriculumSubtitle": { "description": "Explanation under the curriculum selection headline." },
+  "@onboardingCurriculumSubtitle": {
+    "description": "Explanation under the curriculum selection headline."
+  },
   "onboardingCountryLabel": "Country",
-  "@onboardingCountryLabel": { "description": "Label of the country picker." },
+  "@onboardingCountryLabel": {
+    "description": "Label of the country picker."
+  },
   "onboardingCurriculumLabel": "Curriculum",
-  "@onboardingCurriculumLabel": { "description": "Label of the curriculum list." },
+  "@onboardingCurriculumLabel": {
+    "description": "Label of the curriculum list."
+  },
   "onboardingSelectCountryFirst": "Choose your country to see the curricula offered there.",
-  "@onboardingSelectCountryFirst": { "description": "Empty state before a country is chosen." },
+  "@onboardingSelectCountryFirst": {
+    "description": "Empty state before a country is chosen."
+  },
   "onboardingNoCurricula": "No curricula are available in this country yet.",
-  "@onboardingNoCurricula": { "description": "Empty state when a country has no curricula." },
+  "@onboardingNoCurricula": {
+    "description": "Empty state when a country has no curricula."
+  },
   "onboardingHasStreams": "Includes streams",
-  "@onboardingHasStreams": { "description": "Hint on a curriculum that has specializations such as Scientific/Literary." },
-  "onboardingSignUpComingSoon": "Account creation is the next step and is coming soon.",
-  "@onboardingSignUpComingSoon": { "description": "Temporary message after Continue until sign-up exists." },
+  "@onboardingHasStreams": {
+    "description": "Hint on a curriculum that has specializations such as Scientific/Literary."
+  },
   "onboardingSelected": "Selected",
-  "@onboardingSelected": { "description": "Screen-reader state for the chosen option." }
+  "@onboardingSelected": {
+    "description": "Screen-reader state for the chosen option."
+  },
+  "welcomeTitle": "Learn with the right teacher",
+  "@welcomeTitle": {
+    "description": "Headline of the welcome screen."
+  },
+  "welcomeSubtitle": "Lessons, practice and private sessions for your curriculum, in English or Arabic.",
+  "@welcomeSubtitle": {
+    "description": "Subtitle of the welcome screen."
+  },
+  "welcomeStudentCta": "I'm a student",
+  "@welcomeStudentCta": {
+    "description": "Starts student sign-up."
+  },
+  "welcomeTeacherCta": "I'm a teacher",
+  "@welcomeTeacherCta": {
+    "description": "Starts teacher sign-up."
+  },
+  "welcomeSignInCta": "I already have an account",
+  "@welcomeSignInCta": {
+    "description": "Goes to sign-in."
+  },
+  "signInTitle": "Welcome back",
+  "@signInTitle": {
+    "description": "Sign-in screen headline."
+  },
+  "signInSubmit": "Sign in",
+  "@signInSubmit": {
+    "description": "Sign-in button."
+  },
+  "signInNoAccount": "New here? Create an account",
+  "@signInNoAccount": {
+    "description": "Link from sign-in to the welcome screen."
+  },
+  "fieldEmail": "Email",
+  "@fieldEmail": {
+    "description": "Email field label."
+  },
+  "fieldPassword": "Password",
+  "@fieldPassword": {
+    "description": "Password field label."
+  },
+  "fieldNewPasswordHelper": "At least 8 characters, including a letter and a number.",
+  "@fieldNewPasswordHelper": {
+    "description": "Helper under a new password field."
+  },
+  "fieldName": "Your name",
+  "@fieldName": {
+    "description": "Display name field label."
+  },
+  "fieldHeadline": "Headline",
+  "@fieldHeadline": {
+    "description": "Teacher headline field label."
+  },
+  "fieldHeadlineHelper": "For example: Physics teacher · 10 years of Tawjihi",
+  "@fieldHeadlineHelper": {
+    "description": "Helper under the teacher headline field."
+  },
+  "showPassword": "Show password",
+  "@showPassword": {
+    "description": "Accessibility label of the show-password button."
+  },
+  "hidePassword": "Hide password",
+  "@hidePassword": {
+    "description": "Accessibility label of the hide-password button."
+  },
+  "validationRequired": "This field is required.",
+  "@validationRequired": {
+    "description": "Field is empty."
+  },
+  "validationEmail": "Enter a valid email address.",
+  "@validationEmail": {
+    "description": "Email format is wrong."
+  },
+  "validationPassword": "Use at least 8 characters, including a letter and a number.",
+  "@validationPassword": {
+    "description": "Password does not meet the policy."
+  },
+  "validationName": "Enter between 2 and 100 characters.",
+  "@validationName": {
+    "description": "Display name length."
+  },
+  "validationHeadline": "Enter between 3 and 150 characters.",
+  "@validationHeadline": {
+    "description": "Headline length."
+  },
+  "errorInvalidCredentials": "The email or password is incorrect.",
+  "@errorInvalidCredentials": {
+    "description": "Server code auth.invalid_credentials."
+  },
+  "errorLockedOut": "Too many failed attempts. Try again in 15 minutes.",
+  "@errorLockedOut": {
+    "description": "Server code auth.locked_out."
+  },
+  "errorEmailTaken": "An account with this email already exists. Try signing in.",
+  "@errorEmailTaken": {
+    "description": "Server code auth.email_taken."
+  },
+  "errorWeakPassword": "This password is too weak. Use at least 8 characters with a letter and a number.",
+  "@errorWeakPassword": {
+    "description": "Server code auth.weak_password."
+  },
+  "errorSessionExpired": "Your session has ended. Please sign in again.",
+  "@errorSessionExpired": {
+    "description": "Server code auth.invalid_refresh_token."
+  },
+  "errorStudyPlanInvalid": "Your study choices aren't valid any more. Go back and choose again.",
+  "@errorStudyPlanInvalid": {
+    "description": "Server codes profile.*_not_in_* and curriculum_not_available."
+  },
+  "onboardingDetailsTitle": "Tell us about your studies",
+  "@onboardingDetailsTitle": {
+    "description": "Headline of onboarding step 2."
+  },
+  "onboardingGradeLabel": "Grade",
+  "@onboardingGradeLabel": {
+    "description": "Grade picker label."
+  },
+  "onboardingStreamLabel": "Stream",
+  "@onboardingStreamLabel": {
+    "description": "Stream picker label."
+  },
+  "onboardingSubjectsLabel": "Subjects",
+  "@onboardingSubjectsLabel": {
+    "description": "Subjects picker label."
+  },
+  "onboardingSubjectsHint": "Choose the subjects you want help with. You can change them later.",
+  "@onboardingSubjectsHint": {
+    "description": "Helper under the subjects picker."
+  },
+  "onboardingChooseGradeFirst": "Choose your grade to see its subjects.",
+  "@onboardingChooseGradeFirst": {
+    "description": "Empty state before a grade is chosen."
+  },
+  "onboardingAccountTitle": "Create your account",
+  "@onboardingAccountTitle": {
+    "description": "Headline of onboarding step 3."
+  },
+  "onboardingCreateAccount": "Create account",
+  "@onboardingCreateAccount": {
+    "description": "Final sign-up button."
+  },
+  "onboardingHaveAccount": "Already have an account? Sign in",
+  "@onboardingHaveAccount": {
+    "description": "Link to sign-in from sign-up."
+  },
+  "teacherSignupTitle": "Create your teacher account",
+  "@teacherSignupTitle": {
+    "description": "Teacher sign-up headline."
+  },
+  "teacherSignupSubtitle": "We review new teacher profiles before students can find you.",
+  "@teacherSignupSubtitle": {
+    "description": "Teacher sign-up explanation."
+  },
+  "homeGreeting": "Hello, {name}",
+  "@homeGreeting": {
+    "description": "Greeting on the signed-in home screen.",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Lina"
+      }
+    }
+  },
+  "homeRoleStudent": "Student",
+  "@homeRoleStudent": {
+    "description": "Role chip."
+  },
+  "homeRoleTeacher": "Teacher",
+  "@homeRoleTeacher": {
+    "description": "Role chip."
+  },
+  "homeTeacherPending": "Your teacher profile is under review. Students can't find you yet.",
+  "@homeTeacherPending": {
+    "description": "Banner for unverified teachers."
+  },
+  "homeTeacherVerified": "Your profile is verified. Students can find you.",
+  "@homeTeacherVerified": {
+    "description": "Banner for verified teachers."
+  },
+  "homeComingSoon": "Your courses and lessons will appear here.",
+  "@homeComingSoon": {
+    "description": "Empty state on home until courses exist."
+  },
+  "profileTitle": "Your profile",
+  "@profileTitle": {
+    "description": "Profile section title."
+  },
+  "profileTimeZone": "Time zone",
+  "@profileTimeZone": {
+    "description": "Profile row label."
+  },
+  "profileCountry": "Country",
+  "@profileCountry": {
+    "description": "Profile row label."
+  },
+  "profileSignOut": "Sign out",
+  "@profileSignOut": {
+    "description": "Sign-out button."
+  },
+  "splashUnavailable": "We couldn't restore your session.",
+  "@splashUnavailable": {
+    "description": "Shown when the saved session cannot be checked."
+  },
+  "splashSignInInstead": "Sign in again",
+  "@splashSignInInstead": {
+    "description": "Option on the splash error."
+  }
 }

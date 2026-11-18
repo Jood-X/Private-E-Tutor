@@ -43,7 +43,16 @@ Reference data (countries, curricula, grades, subjects, academic years) is part 
 | Drop and recreate the local database (**deletes all data**) | `./scripts/db-reset.ps1` (asks for confirmation) |
 | Generate a SQL script for a DBA/production | `dotnet ef migrations script --idempotent --project src/ETutor.Infrastructure --startup-project src/ETutor.Api -o migrate.sql` (from `backend/`) |
 
-Development/demo data (teachers, students, courses) will be added by a `seed-dev` command when those tables exist (Phase 2+).
+### Demo accounts
+
+```powershell
+cd backend
+dotnet run --project src/ETutor.Api -- seed-dev
+```
+
+Creates two verified teachers and three students (emails ending in `@etutor.test`) and prints their random
+passwords **once**. It only runs in Development and skips accounts that already exist; to get new passwords, run
+`./scripts/db-reset.ps1` first.
 
 ## Configuration
 
@@ -55,6 +64,9 @@ variables using `__` as the separator.
 |---|---|---|---|
 | `ConnectionStrings:Database` | `ConnectionStrings__Database` | LocalDB in Development, **empty in production** (startup fails fast) | SQL Server connection |
 | `Branding:ProductName` | `Branding__ProductName` | `E-Tutor` | Name shown in Swagger |
+| `Jwt:SigningKey` | `Jwt__SigningKey` | **secret**: user-secrets locally (created by `setup.ps1`), environment on servers; startup fails if shorter than 32 bytes | Signs access tokens |
+| `Jwt:Issuer` / `Audience` / `AccessTokenMinutes` / `RefreshTokenDays` | `Jwt__…` | `etutor-api` / `etutor-app` / 15 / 30 | Token settings |
+| `RateLimiting:AuthPermitLimit` | `RateLimiting__AuthPermitLimit` | 10 per window per IP | Limit for sign-in, registration, refresh |
 | `Cors:AllowedOrigins` | `Cors__AllowedOrigins__0` … | none (Development: `http://localhost:8686`) | Browser origins allowed to call the API. Native apps are unaffected. |
 | `RateLimiting:PermitLimit` / `WindowSeconds` | `RateLimiting__PermitLimit` … | 120 per 60 s per client IP | Abuse protection |
 | `Serilog:*` | `Serilog__MinimumLevel__Default` … | JSON console (prod), readable console + daily file (dev) | Logging |
@@ -93,7 +105,9 @@ Plain HTTP is allowed **only in Android debug builds** (`android/app/src/debug/A
 | Gradle: `Could not GET 'https://dl.google.com/...'` / `No such host is known` | The machine lost network/DNS while Gradle was downloading build plugins. Check the connection (`Resolve-DnsName dl.google.com`) and run `flutter run` again. The first Android build downloads several hundred MB (Gradle, plugins, NDK) and can take 10+ minutes. Later builds are fast. |
 | Warning: `shared_preferences_android requires Android NDK 27.0.12077973` | Harmless: NDKs are backward compatible and the app has no native code. Optionally set `ndkVersion = "27.0.12077973"` in `android/app/build.gradle.kts` (triggers a ~1 GB NDK download). |
 | App shows loading placeholders for several seconds on first launch | The first API call wakes up LocalDB (~4 s). Later calls are fast. |
-| App shows "You appear to be offline" | The API isn't running, or (physical device) `API_BASE_URL` doesn't point at your PC's LAN IP. |
+| Android logcat: `FlutterSecureStorage: EncryptedSharedPreferences initialization failed … Falling back to custom ciphers` | Harmless startup check of the secure-storage library (known-limitations L11). |
+| API fails at startup: `Jwt:SigningKey must be at least 32 bytes` | Run `./scripts/setup.ps1` (creates a local key in user-secrets) or set `Jwt__SigningKey`. |
+| App shows "We can't reach the server" | The API isn't running, or (physical device) `API_BASE_URL` doesn't point at your PC's LAN IP. |
 
 ## Quality gate
 

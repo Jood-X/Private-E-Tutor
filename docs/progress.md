@@ -1,5 +1,52 @@
 # Progress
 
+## Phase 2: Authentication & profiles (2026-11-18)
+
+### Implemented and tested
+
+**Backend**
+* Domain: `UserProfile`, `TeacherProfile` (verification status), `StudentProfile` (curriculum, grade, optional
+  stream, subjects), `RefreshToken`. Migration `UsersAndAuthentication`: ASP.NET Core Identity tables on the same
+  `DbContext`, roles seeded, composite FKs tying grade/stream to the student's curriculum, unique token-hash index.
+* Registration (student and teacher), sign-in with lockout, refresh-token rotation with reuse detection,
+  sign-out, and own-profile read/update endpoints (`/me`, `/me/student`, `/me/teacher`) with role policies.
+* Catalog consistency rules (curriculum offered in country, grade/stream/subjects belong to it) with field errors.
+* Deny-by-default authorization, stricter rate limit on credential endpoints, JWT bearer in Swagger UI.
+* Transactions: account + profile + first refresh token are written atomically (retried as a unit).
+* `seed-dev` command for demo accounts; `setup.ps1` creates a local JWT signing key in user-secrets.
+
+**Mobile**
+* Secure token storage (Keystore), `AuthInterceptor` (one shared refresh for concurrent 401s, retry, sign-out on
+  rejection, session kept when offline), app-wide `SessionCubit`, session-driven routing with splash/restore.
+* Screens: welcome, sign-in, 3-step student sign-up (curriculum → grade/stream/subjects → account), teacher
+  sign-up, signed-in home with profile and teacher verification banner, sign-out. EN/AR (75 strings each).
+* Design system: `AppTextField` (visible label, helper, inline error, password toggle, autofill hints),
+  `AppFlowScaffold`, `AppPrimaryButton` (busy state).
+
+### Checks run
+
+| Check | Result |
+|---|---|
+| `dotnet format --verify-no-changes`, `dotnet build` (warnings as errors) | clean |
+| Backend unit tests | **41 passed** (+ token service, validators) |
+| Backend integration tests (real API + LocalDB) | **51 passed** (+ registration rules, lockout, enumeration-safe errors, refresh rotation/reuse, forged/expired/tampered tokens, role 403s, own-profile isolation, auth rate limit) |
+| `flutter analyze`, `dart format` check | clean |
+| Mobile tests | **70 passed** (+ interceptor concurrency/refresh outcomes, session restore, routing rules, full sign-up/sign-in/sign-out widget flows, validation, logo layout regression) |
+| Android emulator (API 35) against the local API | Welcome → sign-in → home; force-stop + relaunch restores the session from the Keystore; sign-out calls `/auth/logout` (204) |
+
+### Found and fixed during the phase
+
+* Refresh flow draft discarded successful refreshes (caught in review before running); rewritten.
+* A network failure during token refresh would have signed users out; the interceptor now distinguishes
+  "rejected" from "unreachable".
+* Welcome logo stretched to full width on the device; fixed with a regression test.
+* Test client did not parse enums as strings (API contract); fixed in the test envelope reader.
+
+### Not done / not verified
+
+* Email verification, password reset and in-app profile editing (D21, L8, L9).
+* Not run on a physical device or iOS.
+
 ## Phase 1: Foundation (2026-11-14)
 
 ### Implemented and tested

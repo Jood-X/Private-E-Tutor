@@ -26,6 +26,22 @@ class ApiClient {
     CancelToken? cancelToken,
   }) => _send(() => _dio.get<Object?>(path, queryParameters: query, cancelToken: cancelToken), decode);
 
+  Future<ApiResult<T>> post<T>(String path, Object? body, JsonDecoder<T> decode) =>
+      _send(() => _dio.post<Object?>(path, data: body), decode);
+
+  Future<ApiResult<T>> put<T>(String path, Object? body, JsonDecoder<T> decode) =>
+      _send(() => _dio.put<Object?>(path, data: body), decode);
+
+  /// For endpoints that answer 204 No Content (no envelope).
+  Future<ApiResult<void>> postNoContent(String path, Object? body) async {
+    try {
+      await _dio.post<Object?>(path, data: body);
+      return const ApiSuccess(null);
+    } on DioException catch (exception) {
+      return ApiError(_failureFromDio(exception));
+    }
+  }
+
   Future<ApiResult<T>> _send<T>(Future<Response<Object?>> Function() request, JsonDecoder<T> decode) async {
     final Response<Object?> response;
     try {

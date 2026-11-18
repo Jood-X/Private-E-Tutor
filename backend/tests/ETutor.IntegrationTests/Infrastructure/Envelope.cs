@@ -10,7 +10,11 @@ public sealed record EnvelopeError(string Code, string Message, string? Field);
 
 public static class EnvelopeExtensions
 {
-    private static readonly JsonSerializerOptions Options = new(JsonSerializerDefaults.Web);
+    // Same conventions as the API: camelCase and enums as strings.
+    private static readonly JsonSerializerOptions Options = new(JsonSerializerDefaults.Web)
+    {
+        Converters = { new System.Text.Json.Serialization.JsonStringEnumConverter() },
+    };
 
     public static async Task<Envelope<T>> ReadEnvelopeAsync<T>(this HttpResponseMessage response)
     {

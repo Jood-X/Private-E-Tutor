@@ -1,4 +1,5 @@
 using ETutor.Application.Catalog;
+using ETutor.Application.Users;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,6 +11,13 @@ public static class DependencyInjection
     {
         services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly, includeInternalTypes: true);
         services.AddScoped<CatalogService>();
+
+        services.AddScoped<StudyPlanRules>();
+        services.AddScoped<ProfileQueries>();
+        services.AddScoped<TokenIssuer>();
+        services.AddScoped<RegistrationService>();
+        services.AddScoped<SessionService>();
+        services.AddScoped<ProfileService>();
         return services;
     }
 }
