@@ -99,6 +99,12 @@ class LearningApiRepository implements LearningRepository {
   Future<ApiResult<LessonDetail>> getLesson(String lessonId) =>
       _client.get('$_base/learning/lessons/$lessonId', (data) => LessonDetail.fromJson(data! as Map<String, dynamic>));
 
+  @override
+  Future<ApiResult<VideoPlayback>> getPlayback(String resourceId) => _client.get(
+    '$_base/resources/$resourceId/playback',
+    (data) => VideoPlayback.fromJson(data! as Map<String, dynamic>),
+  );
+
   static TeacherCard _teacherCard(Map<String, dynamic> json) => TeacherCard(
     id: json['id'] as String,
     displayName: json['displayName'] as String,

@@ -170,5 +170,18 @@
   "errorConcurrency": "غيّر شخص آخر هذا العنصر للتو. حدّث الصفحة وحاول مرة أخرى.",
   "errorInvalidCatalogSelection": "هذا الصف وهذه المادة لا ينتميان إلى هذا المنهاج.",
   "errorInvalidTransition": "لم يعد هذا التغيير ممكنًا. حدّث الصفحة لرؤية الحالة الأحدث.",
-  "errorLinkOpen": "تعذّر فتح هذا الرابط."
+  "errorLinkOpen": "تعذّر فتح هذا الرابط.",
+  "addVideo": "إضافة فيديو",
+  "fieldVideoLink": "رابط يوتيوب",
+  "videoLinkHelp": "الصق رابط مشاركة فيديو غير مُدرج أو عام من قناتك.",
+  "fieldVideoTitleOptional": "العنوان (اختياري)",
+  "checkingVideo": "جارٍ التحقق من الفيديو…",
+  "playVideo": "تشغيل الفيديو: {title}",
+  "videoDuration": "المدة {duration}",
+  "videoUnavailableTile": "هذا الفيديو لم يعد متاحًا.",
+  "errorVideoInvalidUrl": "هذا ليس رابط فيديو على يوتيوب. الصق رابطًا مثل youtu.be/… أو youtube.com/watch?v=…",
+  "errorVideoNotFound": "لم نعثر على هذا الفيديو. قد يكون خاصًا أو محذوفًا؛ استخدم فيديو غير مُدرج أو عامًا.",
+  "errorVideoNotEmbeddable": "صاحب هذا الفيديو لا يسمح بتشغيله في تطبيقات أخرى. فعّل التضمين من YouTube Studio.",
+  "errorVideoUnavailable": "هذا الفيديو لم يعد متاحًا. اسأل معلّمك عنه.",
+  "errorVideoProviderUnavailable": "تعذّر الوصول إلى يوتيوب الآن. حاول مرة أخرى بعد قليل."
 }

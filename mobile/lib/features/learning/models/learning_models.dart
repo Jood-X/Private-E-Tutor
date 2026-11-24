@@ -205,4 +205,6 @@ abstract interface class LearningRepository {
   Future<ApiResult<StudentCourse>> getCourse(String courseId);
 
   Future<ApiResult<LessonDetail>> getLesson(String lessonId);
+
+  Future<ApiResult<VideoPlayback>> getPlayback(String resourceId);
 }

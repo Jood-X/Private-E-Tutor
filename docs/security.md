@@ -57,12 +57,22 @@ Living document: each phase updates the "Implemented" and "Open risks" sections.
 | Downloads only for the owner teacher or approved students; `no-store` caching | `LearningService.OpenDocumentAsync`, `ResourcesController` | `Documents_AreDownloadableOnly…` |
 | Links restricted to absolute HTTPS URLs | `ContentRules.IsAllowedLink` | unit + integration tests |
 
+## Implemented (Phase 4a)
+
+| Control | Where | Tested by |
+|---|---|---|
+| Video links parsed strictly (YouTube hosts and 11-character IDs only; other hosts, look-alike domains and schemes refused) | `YouTubeVideoProvider.TryParse` | `YouTubeVideoProviderTests` |
+| Videos checked with the provider before they're attached (missing, private or non-embeddable videos rejected) | `VideoResourceService` | `VideosTheProviderRefuses_AreNotAdded` |
+| Ownership before any provider call (other teachers' lessons → 404, YouTube not contacted) | `VideoResourceService` | `AnotherTeachersLesson_IsNotFound…` |
+| Playback details only for the owner teacher or approved students; `no-store` caching | `LearningService.GetPlaybackAsync`, `ResourcesController` | `Playback_IsOnlyForTheTeacherAndApprovedStudents` |
+| YouTube API key server-side only, sent in a header (never in URLs or logs) | `YouTubeVideoProvider`, `YouTubeOptions` | `DataApi_SendsTheKeyInAHeader_NotTheUrl` |
+| Provider timeouts and failures become 503 `video.provider_unavailable`, never 500 | `YouTubeVideoProvider.LookupAsync` | `NetworkFailures_MeanProviderUnavailable` |
+
 ## Planned (by phase)
 
 | Phase | Control |
 |---|---|
-| 4 | Malware scanning of uploads before production; blob storage with private containers. |
-| 4 | Video playback details only for authorized users; YouTube API key server-side only. See the limitations below. |
+| 7 | Malware scanning of uploads before production; blob storage with private containers. |
 | 5 | Answer keys never in student DTOs; server-side scoring and timers. |
 | 6 | Booking ownership checks; DB-enforced slot reservations against double booking. |
 

@@ -29,7 +29,10 @@ public sealed class LessonQueries(IAppDbContext db)
                 resource.IsRequired,
                 resource.ExternalUrl,
                 resource.File == null ? null : resource.File.OriginalFileName,
-                resource.File == null ? null : resource.File.SizeBytes))
+                resource.File == null ? null : resource.File.SizeBytes,
+                resource.VideoAsset == null
+                    ? null
+                    : new ResourceVideoDto(resource.VideoAsset.DurationSeconds, resource.VideoAsset.ThumbnailUrl, resource.VideoAsset.Status)))
             .ToListAsync(cancellationToken);
 
         return new LessonDetailDto(

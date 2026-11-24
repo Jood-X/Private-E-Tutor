@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/api/api_failure.dart';
+import '../../../core/errors/failure_messages.dart';
 import '../../../design_system/components/app_flow_scaffold.dart';
 import '../../../design_system/components/app_state_views.dart';
 import '../../../design_system/components/app_status_chip.dart';
@@ -108,9 +109,16 @@ class _LessonFormState extends State<_LessonForm> {
         const SizedBox(height: AppSpacing.xs - 2),
         TextField(controller: _notes, minLines: 6, maxLines: null, keyboardType: TextInputType.multiline),
         const SizedBox(height: AppSpacing.xl),
-        Row(
+        Semantics(header: true, child: Text(l10n.resourcesTitle, style: textTheme.titleLarge)),
+        // Two actions wrap onto a second line on narrow screens or with longer Arabic labels.
+        Wrap(
+          spacing: AppSpacing.xs,
           children: [
-            Expanded(child: Semantics(header: true, child: Text(l10n.resourcesTitle, style: textTheme.titleLarge))),
+            TextButton.icon(
+              onPressed: _addVideo,
+              icon: const Icon(Icons.smart_display_outlined),
+              label: Text(l10n.addVideo),
+            ),
             TextButton.icon(onPressed: _addLink, icon: const Icon(Icons.add_link_rounded), label: Text(l10n.addLink)),
           ],
         ),
@@ -122,11 +130,119 @@ class _LessonFormState extends State<_LessonForm> {
     );
   }
 
+  Future<void> _addVideo() async {
+    final cubit = context.read<LessonEditorCubit>();
+    await showDialog<void>(
+      context: context,
+      builder: (_) => _VideoDialog(submit: (url, title) => cubit.addVideo(url: url, title: title)),
+    );
+  }
+
   Future<void> _addLink() async {
     final link = await showDialog<({String title, String url})>(context: context, builder: (_) => const _LinkDialog());
     if (link == null || !mounted) return;
     final failure = await context.read<LessonEditorCubit>().addLink(title: link.title, url: link.url);
     if (failure != null && mounted) showFailure(context, failure);
+  }
+}
+
+/// Adds a YouTube video. The dialog sends the request itself and stays open while the server checks the video, so
+/// the provider's answer (not found, embedding off, offline) appears right under the link field.
+class _VideoDialog extends StatefulWidget {
+  const _VideoDialog({required this.submit});
+
+  final Future<ApiFailure?> Function(String url, String? title) submit;
+
+  @override
+  State<_VideoDialog> createState() => _VideoDialogState();
+}
+
+class _VideoDialogState extends State<_VideoDialog> {
+  final _url = TextEditingController();
+  final _title = TextEditingController();
+  bool _busy = false;
+  String? _error;
+
+  @override
+  void dispose() {
+    _url.dispose();
+    _title.dispose();
+    super.dispose();
+  }
+
+  Future<void> _add() async {
+    if (_url.text.trim().isEmpty || _busy) return;
+    setState(() {
+      _busy = true;
+      _error = null;
+    });
+    final failure = await widget.submit(_url.text, _title.text);
+    if (!mounted) return;
+    if (failure == null) {
+      Navigator.pop(context);
+      return;
+    }
+    final message = failure.localizedMessage(AppLocalizations.of(context));
+    setState(() {
+      _busy = false;
+      _error = message;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return AlertDialog(
+      title: Text(l10n.addVideo),
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: _url,
+              autofocus: true,
+              enabled: !_busy,
+              keyboardType: TextInputType.url,
+              textDirection: TextDirection.ltr,
+              decoration: InputDecoration(
+                labelText: l10n.fieldVideoLink,
+                hintText: 'https://youtu.be/…',
+                hintTextDirection: TextDirection.ltr,
+                helperText: _error == null ? l10n.videoLinkHelp : null,
+                helperMaxLines: 3,
+                errorText: _error,
+                errorMaxLines: 4,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            TextField(
+              controller: _title,
+              enabled: !_busy,
+              decoration: InputDecoration(labelText: l10n.fieldVideoTitleOptional),
+            ),
+            if (_busy) ...[
+              const SizedBox(height: AppSpacing.md),
+              Semantics(
+                liveRegion: true,
+                child: Row(
+                  children: [
+                    const SizedBox.square(dimension: 20, child: CircularProgressIndicator(strokeWidth: 2)),
+                    const SizedBox(width: AppSpacing.sm),
+                    Expanded(child: Text(l10n.checkingVideo)),
+                  ],
+                ),
+              ),
+            ],
+            // Announce provider errors to screen readers as they appear.
+            if (_error case final error?) Semantics(liveRegion: true, label: error, child: const SizedBox.shrink()),
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(onPressed: _busy ? null : () => Navigator.pop(context), child: Text(l10n.actionCancel)),
+        FilledButton(style: dialogActionStyle, onPressed: _busy ? null : _add, child: Text(l10n.actionAdd)),
+      ],
+    );
   }
 }
 
@@ -190,16 +306,27 @@ class _ResourceRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final isLink = resource.type == ResourceType.link;
+    final (icon, subtitle) = switch (resource.type) {
+      ResourceType.link => (Icons.link_rounded, resource.url ?? ''),
+      ResourceType.document => (Icons.picture_as_pdf_outlined, resource.fileName ?? l10n.resourceDocument),
+      ResourceType.video => (
+        Icons.smart_display_outlined,
+        switch (resource.video) {
+          VideoInfo(isAvailable: false) => l10n.videoUnavailableTile,
+          VideoInfo(:final durationSeconds?) => formatDuration(durationSeconds),
+          _ => 'YouTube',
+        },
+      ),
+    };
     return ListTile(
       contentPadding: EdgeInsets.zero,
-      leading: Icon(isLink ? Icons.link_rounded : Icons.picture_as_pdf_outlined, color: AppColors.primary),
+      leading: Icon(icon, color: AppColors.primary),
       title: Text(resource.title),
       subtitle: Text(
-        isLink ? resource.url ?? '' : (resource.fileName ?? l10n.resourceDocument),
+        subtitle,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
-        textDirection: TextDirection.ltr,
+        textDirection: resource.type == ResourceType.link ? TextDirection.ltr : null,
       ),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,

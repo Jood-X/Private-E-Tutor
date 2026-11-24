@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../app/routes.dart';
 import '../../../design_system/components/app_status_chip.dart';
 import '../../../design_system/tokens/app_colors.dart';
 import '../../../design_system/tokens/app_dimensions.dart';
@@ -9,6 +11,7 @@ import '../../../l10n/generated/app_localizations.dart';
 import '../../content/models/content_models.dart';
 import '../../content/views/content_labels.dart';
 import '../controllers/learning_cubits.dart';
+import 'video_player_screen.dart';
 
 /// Opens a link outside the app. Injected so widget tests don't launch anything.
 typedef LinkOpener = Future<bool> Function(Uri uri);
@@ -83,7 +86,10 @@ class _Lesson extends StatelessWidget {
           Semantics(header: true, child: Text(l10n.resourcesTitle, style: textTheme.titleLarge)),
           const SizedBox(height: AppSpacing.xs),
           for (final resource in lesson.resources) ...[
-            _ResourceTile(resource: resource, openLink: openLink),
+            if (resource.type == ResourceType.video)
+              VideoTile(resource: resource, onPlay: () => context.push(AppRoutes.studentVideo(resource.id)))
+            else
+              _ResourceTile(resource: resource, openLink: openLink),
             const SizedBox(height: AppSpacing.xs),
           ],
         ],

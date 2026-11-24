@@ -82,6 +82,13 @@ class TeachingApiRepository implements TeachingRepository {
       }, _lesson);
 
   @override
+  Future<ApiResult<LessonDetail>> addVideo(String lessonId, {required String url, String? title}) => _client.post(
+    '$_base/lessons/$lessonId/resources/video',
+    {'url': url.trim(), 'title': (title?.trim().isEmpty ?? true) ? null : title!.trim(), 'isRequired': true},
+    _lesson,
+  );
+
+  @override
   Future<ApiResult<LessonDetail>> deleteResource(String resourceId) =>
       _client.delete('$_base/resources/$resourceId', _lesson);
 

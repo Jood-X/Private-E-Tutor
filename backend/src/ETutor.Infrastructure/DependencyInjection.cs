@@ -3,6 +3,7 @@ using ETutor.Infrastructure.Files;
 using ETutor.Infrastructure.Identity;
 using ETutor.Infrastructure.Persistence;
 using ETutor.Infrastructure.Persistence.Seed;
+using ETutor.Infrastructure.Videos;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -36,6 +37,9 @@ public static class DependencyInjection
         services.AddScoped<IDatabaseErrors, SqlServerDatabaseErrors>();
         services.Configure<FileStorageOptions>(configuration.GetSection(FileStorageOptions.SectionName));
         services.AddSingleton<IFileStorage, LocalFileStorage>();
+
+        services.Configure<YouTubeOptions>(configuration.GetSection(YouTubeOptions.SectionName));
+        services.AddHttpClient<IVideoProvider, YouTubeVideoProvider>();
 
         services.AddIdentityInfrastructure(configuration);
         services.AddScoped<DevDataSeeder>();

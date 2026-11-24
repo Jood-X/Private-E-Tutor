@@ -1,5 +1,53 @@
 # Progress
 
+## Phase 4b: Video, mobile (2026-11-24)
+
+### Implemented and tested
+* Teacher: "Add video" in the lesson editor. The dialog sends the link itself and stays open while YouTube is checked, so a
+  refusal (not found/private, embedding off, YouTube unreachable) appears under the link field and is announced to screen
+  readers. Video rows show the duration (or "YouTube" without an API key) and an unavailable state.
+* Student: video tiles in the lesson (16:9 thumbnail with reserved space, scrim, 64 dp play button, duration badge at the
+  trailing edge, one spoken label). Tapping opens `/s/videos/:id`, which fetches playback details from the authorized
+  endpoint and plays the official YouTube embed (privacy-enhanced, captions and interface in the app language, YouTube's
+  controls, fullscreen in landscape). Loading and localized error states with retry.
+* Player built on `webview_flutter` with an app-identifying `Referer` (decision D26); links out of the player open in the
+  YouTube app or browser. Video error codes localized (EN/AR).
+
+### Checks run
+| Check | Result |
+|---|---|
+| `scripts/check-all.ps1` | all passed (backend 102 unit + 84 integration) |
+| Mobile tests | **93 passed** (+9: duration format, video JSON, tile label and tap, unavailable tile, player load and error, embed URL, add-video refusal stays in the dialog, accepted video appears) |
+| Emulator (Android 15, Google Play image) vs. local API | teacher's unknown link refused inline by real YouTube; real video added; student sees the tile and plays it (video element at 1280x720, playhead advancing, audio active); fullscreen rotates to landscape and back |
+
+### Found and fixed
+* Every video failed with YouTube error "152 - 4" ("This video is unavailable") inside the app, even YouTube's own embed demo.
+  Cause: YouTube now requires embeds to identify the app via the referrer, and `youtube_player_iframe` 5.x can't set it
+  without also breaking the player host. Replaced with a small WebView embed that sends the referrer (D26).
+* The first emulator (ATD image) showed a blank player: those images can't render WebView video (L17).
+
+## Phase 4a: Video, backend (2026-11-24)
+
+### Implemented and tested
+* Migration `VideoAssets`: `VideoAssets` table (unique per teacher + provider + video ID, status check), `LessonResources.VideoAssetId`
+  and a widened check constraint (exactly one source per resource type: document, link or video).
+* `IVideoProvider` abstraction (Application) with `YouTubeVideoProvider` (Infrastructure): strict link parsing (watch, youtu.be,
+  shorts, embed, live, nocookie, bare IDs), Data API lookup with the key in a header, keyless oEmbed fallback, 10 s timeout,
+  failures mapped to 503.
+* `POST /teacher/lessons/{id}/resources/video`: ownership first, then the provider check; the video's own title by default;
+  one `VideoAsset` per teacher and video, refreshed on every link; parallel duplicates answered with 409.
+* `GET /resources/{id}/playback` for the owner teacher or approved students (`no-store`); lesson resources now carry
+  video duration, thumbnail and status. New `ErrorType.Unavailable` → 503.
+
+### Checks run
+| Check | Result |
+|---|---|
+| `scripts/check-all.ps1` (format, build with warnings as errors, all tests, mobile analyze/tests) | all passed |
+| Backend unit tests | **102 passed** (+36: link parsing incl. look-alike hosts, ISO durations, Data API mapping, key in header, oEmbed fallback, network failures) |
+| Backend integration tests | **84 passed** (+12: add video, reuse and custom titles, invalid links, refused videos (404/embedding/outage), other teachers, playback authorization, unavailable videos, non-video resources) |
+| Migration applied to the dev database | yes |
+| Real YouTube oEmbed responses (public video → 200 with title; unknown ID → 400) | match the provider's mapping |
+
 ## Phase 3b: Courses & enrollment, mobile (2026-11-18)
 
 ### Implemented and tested

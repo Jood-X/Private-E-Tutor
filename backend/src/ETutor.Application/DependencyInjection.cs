@@ -26,6 +26,7 @@ public static class DependencyInjection
         services.AddScoped<TeacherCourseService>();
         services.AddScoped<CourseContentService>();
         services.AddScoped<LessonQueries>();
+        services.AddScoped<Videos.VideoResourceService>();
         services.AddScoped<LessonResourceService>();
         services.AddScoped<EnrollmentService>();
         services.AddScoped<TeacherEnrollmentService>();

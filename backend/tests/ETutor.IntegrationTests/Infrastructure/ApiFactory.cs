@@ -1,9 +1,11 @@
+using ETutor.Application.Abstractions;
 using ETutor.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace ETutor.IntegrationTests.Infrastructure;
 
@@ -36,6 +38,9 @@ public class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
 
     Task IAsyncLifetime.DisposeAsync() => DisposeAsync().AsTask();
 
+    /// <summary>Answers video lookups for every test in the collection (see <see cref="FakeVideoProvider"/>).</summary>
+    public FakeVideoProvider Videos { get; } = new();
+
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.UseEnvironment(TestEnvironment);
@@ -48,7 +53,13 @@ public class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
         builder.UseSetting("FileStorage:RootPath", Path.Combine(Path.GetTempPath(), "etutor-integration-tests", "files"));
         builder.UseSetting("Serilog:MinimumLevel:Default", "Warning");
         builder.ConfigureTestServices(services =>
-            services.AddControllers().AddApplicationPart(typeof(TestOnlyController).Assembly));
+        {
+            services.AddControllers().AddApplicationPart(typeof(TestOnlyController).Assembly);
+
+            // Never call YouTube from tests.
+            services.RemoveAll<IVideoProvider>();
+            services.AddSingleton<IVideoProvider>(Videos);
+        });
     }
 }
 

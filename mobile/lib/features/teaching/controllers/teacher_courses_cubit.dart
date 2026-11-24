@@ -87,6 +87,9 @@ class LessonEditorCubit extends Cubit<Loadable<LessonDetail>> {
   Future<ApiFailure?> addLink({required String title, required String url}) =>
       _apply(_repository.addLink(_lessonId, title: title, url: url));
 
+  Future<ApiFailure?> addVideo({required String url, String? title}) =>
+      _apply(_repository.addVideo(_lessonId, url: url, title: title));
+
   Future<ApiFailure?> deleteResource(String resourceId) => _apply(_repository.deleteResource(resourceId));
 
   Future<ApiFailure?> _apply(Future<ApiResult<LessonDetail>> request) async {

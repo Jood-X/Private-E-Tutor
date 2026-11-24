@@ -97,8 +97,9 @@ internal sealed class LessonResourceConfiguration : IEntityTypeConfiguration<Les
     {
         builder.ToTable("LessonResources", table => table.HasCheckConstraint(
             "CK_LessonResources_TypeMatchesSource",
-            "([Type] = 1 AND [FileId] IS NOT NULL AND [ExternalUrl] IS NULL) OR " +
-            "([Type] = 2 AND [ExternalUrl] IS NOT NULL AND [FileId] IS NULL)"));
+            "([Type] = 1 AND [FileId] IS NOT NULL AND [ExternalUrl] IS NULL AND [VideoAssetId] IS NULL) OR " +
+            "([Type] = 2 AND [ExternalUrl] IS NOT NULL AND [FileId] IS NULL AND [VideoAssetId] IS NULL) OR " +
+            "([Type] = 3 AND [VideoAssetId] IS NOT NULL AND [FileId] IS NULL AND [ExternalUrl] IS NULL)"));
         builder.HasKey(resource => resource.Id);
         builder.Property(resource => resource.Type).HasConversion<byte>();
         builder.Property(resource => resource.Title).HasMaxLength(ColumnLengths.Title);
@@ -110,8 +111,31 @@ internal sealed class LessonResourceConfiguration : IEntityTypeConfiguration<Les
             .HasForeignKey(resource => resource.LessonId)
             .OnDelete(DeleteBehavior.Cascade).HasAnnotation(AppDbContext.CascadeAnnotation, true);
         builder.HasOne(resource => resource.File).WithMany().HasForeignKey(resource => resource.FileId);
+        builder.HasOne(resource => resource.VideoAsset).WithMany().HasForeignKey(resource => resource.VideoAssetId);
 
         builder.HasIndex(resource => new { resource.LessonId, resource.SortOrder });
+    }
+}
+
+internal sealed class VideoAssetConfiguration : IEntityTypeConfiguration<VideoAsset>
+{
+    public void Configure(EntityTypeBuilder<VideoAsset> builder)
+    {
+        builder.ToTable("VideoAssets", table => table.HasCheckConstraint("CK_VideoAssets_Status", "[Status] IN (1, 2)"));
+        builder.HasKey(video => video.Id);
+        builder.Property(video => video.Provider).HasMaxLength(32).IsUnicode(false);
+        builder.Property(video => video.ProviderAssetId).HasMaxLength(128).IsUnicode(false);
+        builder.Property(video => video.Title).HasMaxLength(ColumnLengths.Title);
+        builder.Property(video => video.ThumbnailUrl).HasMaxLength(ColumnLengths.Url);
+        builder.Property(video => video.Status).HasConversion<byte>();
+        builder.Property(video => video.LastSyncedAtUtc).HasColumnType("datetime2(0)");
+        builder.Property(video => video.CreatedAtUtc).HasColumnType("datetime2(0)");
+        builder.Property(video => video.UpdatedAtUtc).HasColumnType("datetime2(0)");
+
+        builder.HasOne(video => video.OwnerTeacher).WithMany().HasForeignKey(video => video.OwnerTeacherId);
+
+        // A teacher registers each video once; every lesson that plays it points at the same row.
+        builder.HasIndex(video => new { video.OwnerTeacherId, video.Provider, video.ProviderAssetId }).IsUnique();
     }
 }
 

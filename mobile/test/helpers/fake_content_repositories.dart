@@ -75,6 +75,16 @@ class FakeTeachingRepository implements TeachingRepository {
   Future<ApiResult<LessonDetail>> addLink(String lessonId, {required String title, required String url}) async =>
       const ApiSuccess(sampleLesson);
 
+  /// Answers for "Add video"; the default adds [sampleVideo] to [sampleLesson].
+  ApiResult<LessonDetail> addVideoResult = const ApiSuccess(lessonWithVideo);
+  final List<(String, String?)> addedVideos = [];
+
+  @override
+  Future<ApiResult<LessonDetail>> addVideo(String lessonId, {required String url, String? title}) async {
+    addedVideos.add((url, title));
+    return addVideoResult;
+  }
+
   @override
   Future<ApiResult<LessonDetail>> deleteResource(String resourceId) async => const ApiSuccess(sampleLesson);
 
@@ -120,6 +130,24 @@ const sampleLesson = LessonDetail(
   ],
 );
 
+const sampleVideo = LessonResource(
+  id: 'r-3',
+  type: ResourceType.video,
+  title: 'Forces explained',
+  isRequired: true,
+  video: VideoInfo(isAvailable: true, durationSeconds: 725, thumbnailUrl: 'https://i.ytimg.com/vi/abc/mqdefault.jpg'),
+);
+
+const lessonWithVideo = LessonDetail(
+  id: 'l-1',
+  courseId: 'c-1',
+  title: 'Newton laws',
+  summary: '',
+  notes: '',
+  status: ContentStatus.published,
+  resources: [sampleVideo],
+);
+
 TeacherCard teacherCard(String id, String name) =>
     TeacherCard(id: id, displayName: name, headline: 'Physics teacher', subjects: const ['Physics'], courseCount: 1);
 
@@ -154,6 +182,18 @@ class FakeLearningRepository implements LearningRepository {
   ApiResult<List<MyEnrollment>> enrollmentsResult = const ApiSuccess([]);
   ApiResult<StudentCourse>? courseResult;
   ApiResult<LessonDetail> lessonResult = const ApiSuccess(sampleLesson);
+  ApiResult<VideoPlayback> playbackResult = const ApiSuccess(
+    VideoPlayback(
+      resourceId: 'r-3',
+      provider: 'youtube',
+      assetId: 'dQw4w9WgXcQ',
+      title: 'Forces explained',
+      durationSeconds: 725,
+    ),
+  );
+
+  @override
+  Future<ApiResult<VideoPlayback>> getPlayback(String resourceId) async => playbackResult;
 
   @override
   Future<ApiResult<Paged<TeacherCard>>> searchTeachers(TeacherQuery query, {int page = 1}) {

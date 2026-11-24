@@ -75,7 +75,10 @@ public sealed record LessonDetailDto(
     ContentStatus Status,
     IReadOnlyList<ResourceDto> Resources);
 
-/// <summary>A lesson resource. <c>Url</c> is set for links; documents are fetched from the download endpoint.</summary>
+/// <summary>
+/// A lesson resource. <c>Url</c> is set for links; documents are fetched from the download endpoint; videos carry
+/// display details in <c>Video</c> and are played through the playback endpoint.
+/// </summary>
 public sealed record ResourceDto(
     Guid Id,
     ResourceType Type,
@@ -83,4 +86,7 @@ public sealed record ResourceDto(
     bool IsRequired,
     string? Url,
     string? FileName,
-    long? SizeBytes);
+    long? SizeBytes,
+    ResourceVideoDto? Video = null);
+
+public sealed record ResourceVideoDto(int? DurationSeconds, string? ThumbnailUrl, VideoStatus Status);

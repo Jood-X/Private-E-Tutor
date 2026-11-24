@@ -55,6 +55,8 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options)
 
     public DbSet<LessonResource> LessonResources => Set<LessonResource>();
 
+    public DbSet<VideoAsset> VideoAssets => Set<VideoAsset>();
+
     public DbSet<StoredFile> StoredFiles => Set<StoredFile>();
 
     public DbSet<Enrollment> Enrollments => Set<Enrollment>();

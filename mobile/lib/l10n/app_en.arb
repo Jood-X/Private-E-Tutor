@@ -744,5 +744,69 @@
   "errorLinkOpen": "Couldn't open this link.",
   "@errorLinkOpen": {
     "description": "Snackbar when a lesson link cannot be opened."
+  },
+  "addVideo": "Add video",
+  "@addVideo": {
+    "description": "Button in the lesson editor."
+  },
+  "fieldVideoLink": "YouTube link",
+  "@fieldVideoLink": {
+    "description": "Field label."
+  },
+  "videoLinkHelp": "Paste the share link of an unlisted or public video from your channel.",
+  "@videoLinkHelp": {
+    "description": "Helper text under the link field."
+  },
+  "fieldVideoTitleOptional": "Title (optional)",
+  "@fieldVideoTitleOptional": {
+    "description": "Field label; empty uses the video title."
+  },
+  "checkingVideo": "Checking the video…",
+  "@checkingVideo": {
+    "description": "Shown while the server checks the link."
+  },
+  "playVideo": "Play video: {title}",
+  "@playVideo": {
+    "description": "Screen-reader label of a video tile.",
+    "placeholders": {
+      "title": {
+        "type": "String",
+        "example": "Newton laws"
+      }
+    }
+  },
+  "videoDuration": "Duration {duration}",
+  "@videoDuration": {
+    "description": "Screen-reader text; duration like 4:05.",
+    "placeholders": {
+      "duration": {
+        "type": "String",
+        "example": "4:05"
+      }
+    }
+  },
+  "videoUnavailableTile": "This video is no longer available.",
+  "@videoUnavailableTile": {
+    "description": "Shown on a video tile whose video was removed."
+  },
+  "errorVideoInvalidUrl": "That isn't a YouTube video link. Paste a link like youtu.be/… or youtube.com/watch?v=…",
+  "@errorVideoInvalidUrl": {
+    "description": "video.invalid_url"
+  },
+  "errorVideoNotFound": "We couldn't find this video. It may be private or deleted; use an unlisted or public video.",
+  "@errorVideoNotFound": {
+    "description": "video.not_found"
+  },
+  "errorVideoNotEmbeddable": "This video's owner doesn't allow it to play in other apps. Turn on embedding in YouTube Studio.",
+  "@errorVideoNotEmbeddable": {
+    "description": "video.not_embeddable"
+  },
+  "errorVideoUnavailable": "This video is no longer available. Ask your teacher about it.",
+  "@errorVideoUnavailable": {
+    "description": "video.unavailable"
+  },
+  "errorVideoProviderUnavailable": "YouTube can't be reached right now. Try again in a moment.",
+  "@errorVideoProviderUnavailable": {
+    "description": "video.provider_unavailable"
   }
 }

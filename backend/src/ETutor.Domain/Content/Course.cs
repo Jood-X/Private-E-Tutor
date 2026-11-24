@@ -121,6 +121,7 @@ public enum ResourceType : byte
 {
     Document = 1,
     Link = 2,
+    Video = 3,
 }
 
 /// <summary>
@@ -145,6 +146,8 @@ public sealed class LessonResource : IAuditable
 
     public string? ExternalUrl { get; set; }
 
+    public Guid? VideoAssetId { get; set; }
+
     public DateTime CreatedAtUtc { get; set; }
 
     public DateTime UpdatedAtUtc { get; set; }
@@ -152,4 +155,6 @@ public sealed class LessonResource : IAuditable
     public Lesson? Lesson { get; set; }
 
     public Files.StoredFile? File { get; set; }
+
+    public VideoAsset? VideoAsset { get; set; }
 }

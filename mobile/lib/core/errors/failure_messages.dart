@@ -49,5 +49,10 @@ String? messageForCode(String? code, AppLocalizations l10n) => switch (code) {
   'course.invalid_link' => l10n.errorInvalidLink,
   'course.invalid_catalog_selection' => l10n.errorInvalidCatalogSelection,
   'common.concurrency_conflict' => l10n.errorConcurrency,
+  'video.invalid_url' => l10n.errorVideoInvalidUrl,
+  'video.not_found' => l10n.errorVideoNotFound,
+  'video.not_embeddable' => l10n.errorVideoNotEmbeddable,
+  'video.unavailable' => l10n.errorVideoUnavailable,
+  'video.provider_unavailable' => l10n.errorVideoProviderUnavailable,
   _ => null,
 };

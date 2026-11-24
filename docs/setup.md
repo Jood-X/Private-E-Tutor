@@ -66,6 +66,7 @@ variables using `__` as the separator.
 | `Branding:ProductName` | `Branding__ProductName` | `E-Tutor` | Name shown in Swagger |
 | `Jwt:SigningKey` | `Jwt__SigningKey` | **secret**: user-secrets locally (created by `setup.ps1`), environment on servers; startup fails if shorter than 32 bytes | Signs access tokens |
 | `Jwt:Issuer` / `Audience` / `AccessTokenMinutes` / `RefreshTokenDays` | `Jwt__…` | `etutor-api` / `etutor-app` / 15 / 30 | Token settings |
+| `YouTube:ApiKey` | `YouTube__ApiKey` | **secret**, optional: user-secrets locally (`dotnet user-secrets set "YouTube:ApiKey" "…" --project src/ETutor.Api`), environment on servers | YouTube Data API v3 key for checking linked videos. Without it the keyless oEmbed check is used (no duration; see limitation L15). |
 | `RateLimiting:AuthPermitLimit` | `RateLimiting__AuthPermitLimit` | 10 per window per IP | Limit for sign-in, registration, refresh |
 | `Cors:AllowedOrigins` | `Cors__AllowedOrigins__0` … | none (Development: `http://localhost:8686`) | Browser origins allowed to call the API. Native apps are unaffected. |
 | `RateLimiting:PermitLimit` / `WindowSeconds` | `RateLimiting__PermitLimit` … | 120 per 60 s per client IP | Abuse protection |

@@ -58,7 +58,8 @@ localized messages**; codes are never renamed once published. They're defined in
 | 404 | Not found, **or exists but belongs to someone else** (prevents ID probing) | `common.not_found`, `catalog.country_not_found` |
 | 405 | Wrong HTTP method | `common.method_not_allowed` |
 | 409 | Conflict / concurrent modification | `auth.email_taken`, `enrollment.already_requested`, `common.concurrency_conflict` |
-| 422 | Valid input that breaks a business rule | (later phases) |
+| 422 | Valid input that breaks a business rule | `course.no_published_lesson`, `video.not_found`, `video.not_embeddable`, `video.unavailable` |
+| 503 | A dependency is temporarily unreachable; retry later | `video.provider_unavailable` |
 | 429 | Rate limited (`Retry-After` header set) | `common.rate_limited` |
 | 500 | Unexpected failure. Generic message only; no exception text, stack trace or SQL. | `common.unexpected` |
 
@@ -101,6 +102,7 @@ localized messages**; codes are never renamed once published. They're defined in
 | POST | `/api/v1/teacher/units/{id}/lessons` | Teacher (owner) | Add a lesson |
 | GET, PUT, DELETE | `/api/v1/teacher/lessons/{id}` (+ `/status`, `/position`) | Teacher (owner) | Lesson detail, edit, status, reorder, delete drafts |
 | POST | `/api/v1/teacher/lessons/{id}/resources/link` | Teacher (owner) | Add an HTTPS link |
+| POST | `/api/v1/teacher/lessons/{id}/resources/video` | Teacher (owner) | Link a YouTube video (`url`: share link or ID, optional `title`, `isRequired`); checked with the provider first |
 | POST | `/api/v1/teacher/lessons/{id}/resources/document` | Teacher (owner) | Upload a PDF (multipart: `file`, `title`, `isRequired`; max 20 MB) |
 | DELETE | `/api/v1/teacher/resources/{id}` | Teacher (owner) | Remove a resource (and its file) |
 | GET | `/api/v1/teacher/enrollments?status=&courseId=&page=&pageSize=` | Teacher | Request queue and students (paginated) |
@@ -113,6 +115,7 @@ localized messages**; codes are never renamed once published. They're defined in
 | GET | `/api/v1/learning/courses/{id}` | Student | Course summary; outline only when approved |
 | GET | `/api/v1/learning/lessons/{id}` | Student (approved) | Lesson notes and resources |
 | GET | `/api/v1/resources/{id}/file` | Owner teacher or approved student | **File response** (not the envelope) |
+| GET | `/api/v1/resources/{id}/playback` | Owner teacher or approved student | Provider and video ID for the in-app player (`no-store`) |
 
 ### Authentication
 

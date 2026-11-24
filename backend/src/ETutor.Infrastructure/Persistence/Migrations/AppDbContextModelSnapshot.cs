@@ -2893,15 +2893,20 @@ namespace ETutor.Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("UpdatedAtUtc")
                         .HasColumnType("datetime2(0)");
 
+                    b.Property<Guid?>("VideoAssetId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("FileId");
+
+                    b.HasIndex("VideoAssetId");
 
                     b.HasIndex("LessonId", "SortOrder");
 
                     b.ToTable("LessonResources", null, t =>
                         {
-                            t.HasCheckConstraint("CK_LessonResources_TypeMatchesSource", "([Type] = 1 AND [FileId] IS NOT NULL AND [ExternalUrl] IS NULL) OR ([Type] = 2 AND [ExternalUrl] IS NOT NULL AND [FileId] IS NULL)");
+                            t.HasCheckConstraint("CK_LessonResources_TypeMatchesSource", "([Type] = 1 AND [FileId] IS NOT NULL AND [ExternalUrl] IS NULL AND [VideoAssetId] IS NULL) OR ([Type] = 2 AND [ExternalUrl] IS NOT NULL AND [FileId] IS NULL AND [VideoAssetId] IS NULL) OR ([Type] = 3 AND [VideoAssetId] IS NOT NULL AND [FileId] IS NULL AND [ExternalUrl] IS NULL)");
                         });
                 });
 
@@ -2943,6 +2948,65 @@ namespace ETutor.Infrastructure.Persistence.Migrations
                     b.ToTable("Units", null, t =>
                         {
                             t.HasCheckConstraint("CK_Units_Status", "[Status] IN (0, 1, 2)");
+                        });
+                });
+
+            modelBuilder.Entity("ETutor.Domain.Content.VideoAsset", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<int?>("DurationSeconds")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsEmbeddable")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("LastSyncedAtUtc")
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<Guid>("OwnerTeacherId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Provider")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(32)");
+
+                    b.Property<string>("ProviderAssetId")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(128)");
+
+                    b.Property<byte>("Status")
+                        .HasColumnType("tinyint");
+
+                    b.Property<string>("ThumbnailUrl")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTime>("UpdatedAtUtc")
+                        .HasColumnType("datetime2(0)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OwnerTeacherId", "Provider", "ProviderAssetId")
+                        .IsUnique();
+
+                    b.ToTable("VideoAssets", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_VideoAssets_Status", "[Status] IN (1, 2)");
                         });
                 });
 
@@ -3583,9 +3647,15 @@ namespace ETutor.Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasAnnotation("ETutor:IntentionalCascade", true);
 
+                    b.HasOne("ETutor.Domain.Content.VideoAsset", "VideoAsset")
+                        .WithMany()
+                        .HasForeignKey("VideoAssetId");
+
                     b.Navigation("File");
 
                     b.Navigation("Lesson");
+
+                    b.Navigation("VideoAsset");
                 });
 
             modelBuilder.Entity("ETutor.Domain.Content.Unit", b =>
@@ -3598,6 +3668,17 @@ namespace ETutor.Infrastructure.Persistence.Migrations
                         .HasAnnotation("ETutor:IntentionalCascade", true);
 
                     b.Navigation("Course");
+                });
+
+            modelBuilder.Entity("ETutor.Domain.Content.VideoAsset", b =>
+                {
+                    b.HasOne("ETutor.Domain.Users.TeacherProfile", "OwnerTeacher")
+                        .WithMany()
+                        .HasForeignKey("OwnerTeacherId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("OwnerTeacher");
                 });
 
             modelBuilder.Entity("ETutor.Domain.Enrollments.Enrollment", b =>

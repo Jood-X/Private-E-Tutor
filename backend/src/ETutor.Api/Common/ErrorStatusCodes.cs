@@ -13,6 +13,7 @@ public static class ErrorStatusCodes
         ErrorType.NotFound => StatusCodes.Status404NotFound,
         ErrorType.Conflict => StatusCodes.Status409Conflict,
         ErrorType.BusinessRule => StatusCodes.Status422UnprocessableEntity,
+        ErrorType.Unavailable => StatusCodes.Status503ServiceUnavailable,
         _ => throw new ArgumentOutOfRangeException(nameof(type), type, "Unmapped error type."),
     };
 }

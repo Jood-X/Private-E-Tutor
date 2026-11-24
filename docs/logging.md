@@ -59,4 +59,12 @@ or personal data beyond opaque IDs. The request logger records the path without 
 | 3000 | `enrollment.requested` | Information (enrollment, course IDs) |
 | 3001 | `enrollment.duplicate_request` | Information (course ID) |
 | 3002 | `enrollment.decided` | Information (enrollment ID, new status) |
+
+## Backend video events (4000–4099)
+
+| EventId | Name | Level |
+|---|---|---|
+| 4000 | `video.lookup` | Information (provider, outcome) |
+| 4010 | `youtube.error_status` | Warning (HTTP status only; never the URL or API key) |
+| 4011 | `youtube.unreachable` | Warning (exception type) |
 | 1005 | `request.concurrency_conflict` | Warning (method, path) |

@@ -1,6 +1,7 @@
 using ETutor.Api.Common;
 using ETutor.Api.Security;
 using ETutor.Application.Courses;
+using ETutor.Application.Videos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,7 +12,10 @@ namespace ETutor.Api.Controllers;
 [Route(ApiRoutes.V1 + "/teacher")]
 [ProducesResponseType<ApiResponse<object>>(StatusCodes.Status401Unauthorized)]
 [ProducesResponseType<ApiResponse<object>>(StatusCodes.Status403Forbidden)]
-public sealed class TeacherLessonsController(CourseContentService content, LessonResourceService resources) : ApiControllerBase
+public sealed class TeacherLessonsController(
+    CourseContentService content,
+    LessonResourceService resources,
+    VideoResourceService videos) : ApiControllerBase
 {
     /// <summary>Multipart overhead on top of the 20 MB document limit.</summary>
     private const long MaxUploadRequestBytes = LessonResourceService.MaxDocumentBytes + (1024 * 1024);
@@ -50,6 +54,19 @@ public sealed class TeacherLessonsController(CourseContentService content, Lesso
     public async Task<ActionResult<ApiResponse<LessonDetailDto>>> AddLink(
         Guid lessonId, LinkResourceRequest request, CancellationToken cancellationToken) =>
         FromResult(await resources.AddLinkAsync(lessonId, request, cancellationToken), StatusCodes.Status201Created);
+
+    /// <summary>
+    /// Links a video (a YouTube share link or ID). The provider is checked first: unknown or private videos and
+    /// videos that can't be embedded are rejected with 422; 503 when the provider can't be reached.
+    /// </summary>
+    [HttpPost("lessons/{lessonId:guid}/resources/video")]
+    [ProducesResponseType<ApiResponse<LessonDetailDto>>(StatusCodes.Status201Created)]
+    [ProducesResponseType<ApiResponse<object>>(StatusCodes.Status404NotFound)]
+    [ProducesResponseType<ApiResponse<object>>(StatusCodes.Status422UnprocessableEntity)]
+    [ProducesResponseType<ApiResponse<object>>(StatusCodes.Status503ServiceUnavailable)]
+    public async Task<ActionResult<ApiResponse<LessonDetailDto>>> AddVideo(
+        Guid lessonId, VideoResourceRequest request, CancellationToken cancellationToken) =>
+        FromResult(await videos.AddVideoAsync(lessonId, request, cancellationToken), StatusCodes.Status201Created);
 
     /// <summary>Uploads a PDF (multipart/form-data: file, title, isRequired). Max 20 MB.</summary>
     [HttpPost("lessons/{lessonId:guid}/resources/document")]

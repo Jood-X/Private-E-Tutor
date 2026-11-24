@@ -64,3 +64,9 @@ class StudentLessonCubit extends LoadableCubit<LessonDetail> {
   StudentLessonCubit({required LearningRepository repository, required String lessonId})
     : super(() => repository.getLesson(lessonId));
 }
+
+/// Playback details for one video (only returned to approved students and the course's teacher).
+class VideoPlaybackCubit extends LoadableCubit<VideoPlayback> {
+  VideoPlaybackCubit({required LearningRepository repository, required String resourceId})
+    : super(() => repository.getPlayback(resourceId));
+}

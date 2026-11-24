@@ -25,6 +25,7 @@ import '../features/learning/views/my_learning_screen.dart';
 import '../features/learning/views/student_course_screen.dart';
 import '../features/learning/views/student_lesson_screen.dart';
 import '../features/learning/views/teacher_profile_screen.dart';
+import '../features/learning/views/video_player_screen.dart';
 import '../features/onboarding/controllers/curriculum_selection_cubit.dart';
 import '../features/onboarding/models/catalog_models.dart';
 import '../features/onboarding/views/curriculum_selection_screen.dart';
@@ -60,6 +61,7 @@ abstract final class AppRoutes {
   static String teacherProfile(String teacherId) => '/s/teachers/$teacherId';
   static String studentCourse(String courseId) => '/s/courses/$courseId';
   static String studentLesson(String lessonId) => '/s/lessons/$lessonId';
+  static String studentVideo(String resourceId) => '/s/videos/$resourceId';
 
   // Teacher
   static const teacherCourses = '/t/courses';
@@ -182,6 +184,12 @@ List<RouteBase> _studentRoutes(GetIt locator, SessionCubit session) => [
         (_, state) => StudentCourseScreen(
           createController: () => locator<StudentCourseCubit>(param1: state.pathParameters['id']),
         ),
+  ),
+  GoRoute(
+    path: '/s/videos/:id',
+    builder:
+        (_, state) =>
+            VideoPlayerScreen(createController: () => locator<VideoPlaybackCubit>(param1: state.pathParameters['id'])),
   ),
   GoRoute(
     path: '/s/lessons/:id',

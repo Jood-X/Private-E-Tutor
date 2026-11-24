@@ -18,6 +18,10 @@ Updated at the end of every phase. Items move to "Resolved" with the phase that 
 | L12 | Files | Uploaded PDFs are not malware-scanned, and local-disk storage is development-only (single server). Deleting a unit that contains documents leaves their files on disk (rows are removed by cascade). | Before production: scanning + blob storage + cleanup job |
 | L13 | Content | No server-side rich-text/Markdown rendering: lesson notes are stored as plain text and displayed as-is. | Phase 5 (lesson viewer) |
 | L14 | Mobile content | The app cannot upload or view PDFs yet (API supports both); course details, unit descriptions and resource reordering are not editable from the app. | Phase 5 (lesson viewer / uploads) |
+| L15 | Video | Without a YouTube API key, linked videos have no duration, and private videos can't be told apart from videos with embedding turned off. Video status is checked only when a video is linked: a video deleted or made private on YouTube later still appears until it is linked again (playback then fails in the player). | Configure `YouTube:ApiKey`; periodic re-check later |
+| L16 | Video | Unlisted YouTube IDs can be copied and shared outside the app; YouTube offers no signed URLs or DRM for ordinary channels (decision D3). | Another provider with signed playback (post-MVP) |
+| L17 | Video | Android "ATD" emulator images (e.g. the `Pixel_6_Pro_API_35` AVD) can't render WebView video: the player area stays blank. Use a Google APIs / Play Store image (e.g. `flutter_emulator`) or a real device to test playback. | Test-environment only |
+| L18 | Video | Videos play without progress tracking yet (watched time, completion). The PDF viewer is also still pending (L14). | Phase 5a (progress) |
 | L11 | Mobile logs | On Android, flutter_secure_storage 10 logs `EncryptedSharedPreferences initialization failed … Falling back to custom ciphers` at startup (legacy-format check). Harmless: tokens are stored and read correctly. | Watch library updates |
 
 ## Resolved

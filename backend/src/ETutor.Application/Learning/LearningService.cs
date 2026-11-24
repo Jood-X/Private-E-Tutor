@@ -2,6 +2,7 @@ using ETutor.Application.Abstractions;
 using ETutor.Application.Common;
 using ETutor.Application.Common.Results;
 using ETutor.Application.Courses;
+using ETutor.Application.Videos;
 using ETutor.Domain.Content;
 using ETutor.Domain.Enrollments;
 using Microsoft.EntityFrameworkCore;
@@ -99,6 +100,41 @@ public sealed class LearningService(
 
         var stream = await storage.OpenReadAsync(file.StorageKey, cancellationToken);
         return new FileDownload(stream, file.ContentType, file.OriginalFileName);
+    }
+
+    /// <summary>
+    /// Playback details for a video resource, for its course's teacher or a student who can see the lesson. Kept
+    /// apart from the lesson so a provider with signed, short-lived playback URLs can be added here later.
+    /// </summary>
+    public async Task<Result<VideoPlaybackDto>> GetPlaybackAsync(Guid resourceId, CancellationToken cancellationToken)
+    {
+        var userId = currentUser.RequireUserId();
+        var visibleToStudent = VisibleLessons();
+        var video = await db.LessonResources.AsNoTracking()
+            .Where(resource => resource.Id == resourceId && resource.Type == ResourceType.Video)
+            .Where(resource => db.Courses.Any(course => course.Id == resource.Lesson!.CourseId && course.TeacherId == userId)
+                || visibleToStudent.Any(lesson => lesson.Id == resource.LessonId))
+            .Select(resource => new
+            {
+                resource.Id,
+                resource.Title,
+                resource.VideoAsset!.Provider,
+                resource.VideoAsset.ProviderAssetId,
+                resource.VideoAsset.DurationSeconds,
+                resource.VideoAsset.Status,
+            })
+            .FirstOrDefaultAsync(cancellationToken);
+        if (video is null)
+        {
+            return Error.NotFound(ErrorCodes.Course.ResourceNotFound, "Resource not found.");
+        }
+
+        if (video.Status != VideoStatus.Ready)
+        {
+            return Error.BusinessRule(ErrorCodes.Video.Unavailable, "This video is no longer available.");
+        }
+
+        return new VideoPlaybackDto(video.Id, video.Provider, video.ProviderAssetId, video.Title, video.DurationSeconds);
     }
 
     private IQueryable<Lesson> VisibleLessons()

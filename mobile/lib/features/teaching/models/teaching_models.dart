@@ -169,6 +169,9 @@ abstract interface class TeachingRepository {
 
   Future<ApiResult<LessonDetail>> addLink(String lessonId, {required String title, required String url});
 
+  /// [url] is a YouTube link or video ID; [title] defaults to the video's own title.
+  Future<ApiResult<LessonDetail>> addVideo(String lessonId, {required String url, String? title});
+
   Future<ApiResult<LessonDetail>> deleteResource(String resourceId);
 
   Future<ApiResult<Paged<TeacherEnrollment>>> listEnrollments({required EnrollmentStatus status, int page = 1});

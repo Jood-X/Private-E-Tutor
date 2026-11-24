@@ -9,6 +9,9 @@ public enum ErrorType
     Unauthorized,
     Forbidden,
     BusinessRule,
+
+    /// <summary>A dependency (such as the video provider) is temporarily unreachable; the client may retry.</summary>
+    Unavailable,
 }
 
 /// <summary>
@@ -29,4 +32,6 @@ public sealed record Error(string Code, string Message, ErrorType Type, string? 
     public static Error Forbidden(string code, string message) => new(code, message, ErrorType.Forbidden);
 
     public static Error BusinessRule(string code, string message) => new(code, message, ErrorType.BusinessRule);
+
+    public static Error Unavailable(string code, string message) => new(code, message, ErrorType.Unavailable);
 }

@@ -55,6 +55,15 @@ public static class ErrorCodes
         public const string DocumentTooLarge = "course.document_too_large";
     }
 
+    public static class Video
+    {
+        public const string InvalidUrl = "video.invalid_url";
+        public const string NotFound = "video.not_found";
+        public const string NotEmbeddable = "video.not_embeddable";
+        public const string Unavailable = "video.unavailable";
+        public const string ProviderUnavailable = "video.provider_unavailable";
+    }
+
     public static class Enrollment
     {
         public const string NotFound = "enrollment.not_found";

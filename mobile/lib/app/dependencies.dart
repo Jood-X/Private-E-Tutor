@@ -116,6 +116,9 @@ void registerContentControllers(
     )
     ..registerFactoryParam<StudentLessonCubit, String, void>(
       (lessonId, _) => StudentLessonCubit(repository: learning, lessonId: lessonId),
+    )
+    ..registerFactoryParam<VideoPlaybackCubit, String, void>(
+      (resourceId, _) => VideoPlaybackCubit(repository: learning, resourceId: resourceId),
     );
 }
 

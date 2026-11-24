@@ -48,6 +48,8 @@ public interface IAppDbContext
 
     DbSet<LessonResource> LessonResources { get; }
 
+    DbSet<VideoAsset> VideoAssets { get; }
+
     DbSet<StoredFile> StoredFiles { get; }
 
     DbSet<Enrollment> Enrollments { get; }
