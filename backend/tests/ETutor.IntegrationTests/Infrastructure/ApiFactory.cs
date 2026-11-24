@@ -45,6 +45,7 @@ public class ApiFactory : WebApplicationFactory<Program>, IAsyncLifetime
         builder.UseSetting("RateLimiting:WindowSeconds", "60");
         builder.UseSetting("RateLimiting:AuthPermitLimit", AuthRateLimitPermits.ToString(System.Globalization.CultureInfo.InvariantCulture));
         builder.UseSetting("Jwt:SigningKey", TestSigningKey);
+        builder.UseSetting("FileStorage:RootPath", Path.Combine(Path.GetTempPath(), "etutor-integration-tests", "files"));
         builder.UseSetting("Serilog:MinimumLevel:Default", "Warning");
         builder.ConfigureTestServices(services =>
             services.AddControllers().AddApplicationPart(typeof(TestOnlyController).Assembly));

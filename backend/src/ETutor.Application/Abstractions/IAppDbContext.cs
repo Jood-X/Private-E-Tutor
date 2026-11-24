@@ -1,5 +1,8 @@
 using ETutor.Application.Common.Results;
 using ETutor.Domain.Catalog;
+using ETutor.Domain.Content;
+using ETutor.Domain.Enrollments;
+using ETutor.Domain.Files;
 using ETutor.Domain.Users;
 using Microsoft.EntityFrameworkCore;
 
@@ -36,6 +39,18 @@ public interface IAppDbContext
     DbSet<StudentSubject> StudentSubjects { get; }
 
     DbSet<RefreshToken> RefreshTokens { get; }
+
+    DbSet<Course> Courses { get; }
+
+    DbSet<Unit> Units { get; }
+
+    DbSet<Lesson> Lessons { get; }
+
+    DbSet<LessonResource> LessonResources { get; }
+
+    DbSet<StoredFile> StoredFiles { get; }
+
+    DbSet<Enrollment> Enrollments { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 

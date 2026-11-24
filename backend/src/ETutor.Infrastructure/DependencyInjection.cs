@@ -1,4 +1,5 @@
 using ETutor.Application.Abstractions;
+using ETutor.Infrastructure.Files;
 using ETutor.Infrastructure.Identity;
 using ETutor.Infrastructure.Persistence;
 using ETutor.Infrastructure.Persistence.Seed;
@@ -31,6 +32,10 @@ public static class DependencyInjection
             .UseSqlServer(connectionString, sql => sql.EnableRetryOnFailure())
             .AddInterceptors(provider.GetRequiredService<AuditingInterceptor>()));
         services.AddScoped<IAppDbContext>(provider => provider.GetRequiredService<AppDbContext>());
+
+        services.AddScoped<IDatabaseErrors, SqlServerDatabaseErrors>();
+        services.Configure<FileStorageOptions>(configuration.GetSection(FileStorageOptions.SectionName));
+        services.AddSingleton<IFileStorage, LocalFileStorage>();
 
         services.AddIdentityInfrastructure(configuration);
         services.AddScoped<DevDataSeeder>();

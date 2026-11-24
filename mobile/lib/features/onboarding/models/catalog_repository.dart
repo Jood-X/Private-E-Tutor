@@ -13,4 +13,7 @@ abstract interface class CatalogRepository {
   Future<ApiResult<List<CatalogItem>>> getStreams(int curriculumId);
 
   Future<ApiResult<List<CatalogItem>>> getSubjects(int gradeLevelId);
+
+  /// Newest first; the item's name is the label (e.g. "2026/2027").
+  Future<ApiResult<List<CatalogItem>>> getAcademicYears(int curriculumId);
 }

@@ -15,6 +15,9 @@ Updated at the end of every phase. Items move to "Resolved" with the phase that 
 | L8 | Accounts | No email verification and no password reset (needs an email provider). | Decision D21 |
 | L9 | Profile | The app shows the profile but has no edit screens yet; the API (`PUT /me`, `/me/student`, `/me/teacher`) is implemented and tested. Changing the language in Settings is not yet saved to the server profile. | Phase 3 |
 | L10 | Teachers | Teacher verification has no admin screen; set `TeacherProfiles.VerificationStatus = 1` with SQL or use `seed-dev` accounts. | Admin tooling later |
+| L12 | Files | Uploaded PDFs are not malware-scanned, and local-disk storage is development-only (single server). Deleting a unit that contains documents leaves their files on disk (rows are removed by cascade). | Before production: scanning + blob storage + cleanup job |
+| L13 | Content | No server-side rich-text/Markdown rendering: lesson notes are stored as plain text and displayed as-is. | Phase 5 (lesson viewer) |
+| L14 | Mobile content | The app cannot upload or view PDFs yet (API supports both); course details, unit descriptions and resource reordering are not editable from the app. | Phase 5 (lesson viewer / uploads) |
 | L11 | Mobile logs | On Android, flutter_secure_storage 10 logs `EncryptedSharedPreferences initialization failed … Falling back to custom ciphers` at startup (legacy-format check). Harmless: tokens are stored and read correctly. | Watch library updates |
 
 ## Resolved

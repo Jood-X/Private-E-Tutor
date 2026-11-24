@@ -1,5 +1,60 @@
 # Progress
 
+## Phase 3b: Courses & enrollment, mobile (2026-11-18)
+
+### Implemented and tested
+* Role shells (bottom navigation, per-tab stacks): students `/s/learning`, `/s/discover`, `/s/profile`; teachers
+  `/t/courses`, `/t/requests`, `/t/profile`. `redirectFor` keeps each role in its own area; Home became the Profile tab.
+* Teacher: course list, create course (curriculum → grade → subject cascade), course editor (units, lessons, status
+  menus, publish/archive, delete drafts), lesson editor (fields, notes, https links), enrollment requests
+  (Pending/Students tabs, approve, decline with note, remove, infinite scroll).
+* Student: Discover (debounced search, subject filter for the student's grade, infinite scroll, stale results dropped),
+  teacher profile with "Request to join", My learning, course (outline when approved, status banner otherwise,
+  withdraw), lesson (notes, links opened externally, PDF "coming soon").
+* `LoadableCubit<T>`, `Paged<T>`, `ApiClient.delete`, shared status chips, dialogs and `LoadableView`.
+
+### Checks run
+| Check | Result |
+|---|---|
+| `flutter analyze` | no issues |
+| Mobile tests | **84 passed** (+ redirect by role, discover paging/debounce/stale results, request queue, profile → request, course/lesson screens, link opening) |
+| `scripts/check-all.ps1` | all passed (backend 66 unit + 72 integration) |
+| Android 15 emulator vs. local API | teacher creates, fills and publishes a course; student discovers, requests; teacher approves; student opens the lesson and its link |
+
+### Found and fixed
+* Text dialogs disposed their controller while the closing animation still built the field (crash in debug). The
+  dialog now owns its controller; caught by a widget test.
+* Lesson links could not open on Android 11+ (package visibility): added an https `VIEW` query to the manifest.
+* Dialog buttons stretched full width (theme minimum size); dialogs now use a compact action style.
+
+## Phase 3a: Courses & enrollment, backend (2026-11-18)
+
+### Implemented and tested
+* Migration `CoursesAndEnrollments`: Courses, Units, Lessons, LessonResources, StoredFiles, Enrollments with composite
+  FKs (grade/year in the course's curriculum, subject taught at the grade, lesson's course = its unit's course),
+  CHECK constraints (status ranges, resource type ↔ source), filtered unique index for active enrollments, row versions.
+* Teacher content: courses (create, edit, status rules), units and lessons (create, edit, status, reorder, delete drafts),
+  resources (HTTPS links, PDF upload with signature check), outline with counts.
+* Enrollment: request (409 on duplicates, even concurrent), withdraw, teacher queue (paginated), approve/reject/revoke
+  with notes; transitions are pure, unit-tested rules.
+* Discovery: verified, accepting teachers filtered by curriculum/grade/subject/search (paginated, no N+1); teacher
+  profile with published courses and the caller's enrollment status.
+* Student access: course summary vs. outline, lesson detail and document download only with an approved enrollment.
+* Shared pagination contract, 409 for concurrent edits, local file storage with path-traversal guard.
+
+### Checks run
+| Check | Result |
+|---|---|
+| `dotnet format`, `dotnet build` (warnings as errors) | clean |
+| Backend unit tests | **66 passed** (+ enrollment transitions, course status rules, link rules) |
+| Backend integration tests | **72 passed** (+ cross-teacher 404s, student → teacher 403s, approval gating, revoke/withdraw, concurrent duplicate requests, discovery filters/verification, pagination, PDF validation and download authorization) |
+
+### Found and fixed
+* "My enrollments" returned 500: ordering after projecting into a record isn't translatable by EF Core. Caught by an
+  integration test; the query now orders before projecting.
+* The decision endpoint's response could fail for courses with more than 50 enrollments (it re-read a page); replaced
+  with a single-row projection.
+
 ## Phase 2: Authentication & profiles (2026-11-18)
 
 ### Implemented and tested

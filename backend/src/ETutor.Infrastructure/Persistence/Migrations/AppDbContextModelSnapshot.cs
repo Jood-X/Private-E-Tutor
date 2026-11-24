@@ -43,8 +43,6 @@ namespace ETutor.Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasAlternateKey("Id", "CurriculumId");
-
                     b.HasIndex("CurriculumId", "Label")
                         .IsUnique();
 
@@ -2723,6 +2721,347 @@ namespace ETutor.Infrastructure.Persistence.Migrations
                         });
                 });
 
+            modelBuilder.Entity("ETutor.Domain.Content.Course", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("AcademicYearId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ContentLanguage")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(10)");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<int>("CurriculumId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(4000)
+                        .HasColumnType("nvarchar(4000)");
+
+                    b.Property<int>("GradeLevelId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("PublishedAtUtc")
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<byte>("Status")
+                        .HasColumnType("tinyint");
+
+                    b.Property<int>("SubjectId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("TeacherId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTime>("UpdatedAtUtc")
+                        .HasColumnType("datetime2(0)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CurriculumId");
+
+                    b.HasIndex("SubjectId");
+
+                    b.HasIndex("AcademicYearId", "CurriculumId");
+
+                    b.HasIndex("GradeLevelId", "CurriculumId");
+
+                    b.HasIndex("GradeLevelId", "SubjectId");
+
+                    b.HasIndex("TeacherId", "Status");
+
+                    b.HasIndex("Status", "GradeLevelId", "SubjectId");
+
+                    SqlServerIndexBuilderExtensions.IncludeProperties(b.HasIndex("Status", "GradeLevelId", "SubjectId"), new[] { "TeacherId", "Title" });
+
+                    b.ToTable("Courses", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_Courses_ContentLanguage", "[ContentLanguage] IN ('en', 'ar')");
+
+                            t.HasCheckConstraint("CK_Courses_Status", "[Status] IN (0, 1, 2)");
+                        });
+                });
+
+            modelBuilder.Entity("ETutor.Domain.Content.Lesson", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CourseId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<short?>("EstimatedMinutes")
+                        .HasColumnType("smallint");
+
+                    b.Property<string>("Notes")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("int");
+
+                    b.Property<byte>("Status")
+                        .HasColumnType("tinyint");
+
+                    b.Property<string>("Summary")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<Guid>("UnitId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("UpdatedAtUtc")
+                        .HasColumnType("datetime2(0)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CourseId");
+
+                    b.HasIndex("UnitId", "CourseId");
+
+                    b.HasIndex("UnitId", "SortOrder");
+
+                    b.ToTable("Lessons", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_Lessons_Status", "[Status] IN (0, 1, 2)");
+                        });
+                });
+
+            modelBuilder.Entity("ETutor.Domain.Content.LessonResource", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<string>("ExternalUrl")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<Guid?>("FileId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsRequired")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("LessonId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<byte>("Type")
+                        .HasColumnType("tinyint");
+
+                    b.Property<DateTime>("UpdatedAtUtc")
+                        .HasColumnType("datetime2(0)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FileId");
+
+                    b.HasIndex("LessonId", "SortOrder");
+
+                    b.ToTable("LessonResources", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_LessonResources_TypeMatchesSource", "([Type] = 1 AND [FileId] IS NOT NULL AND [ExternalUrl] IS NULL) OR ([Type] = 2 AND [ExternalUrl] IS NOT NULL AND [FileId] IS NULL)");
+                        });
+                });
+
+            modelBuilder.Entity("ETutor.Domain.Content.Unit", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CourseId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("int");
+
+                    b.Property<byte>("Status")
+                        .HasColumnType("tinyint");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTime>("UpdatedAtUtc")
+                        .HasColumnType("datetime2(0)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CourseId", "SortOrder");
+
+                    b.ToTable("Units", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_Units_Status", "[Status] IN (0, 1, 2)");
+                        });
+                });
+
+            modelBuilder.Entity("ETutor.Domain.Enrollments.Enrollment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CourseId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DecidedAtUtc")
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<string>("DecisionNote")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime?>("LastActivityAtUtc")
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<string>("RequestMessage")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime>("RequestedAtUtc")
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<byte>("Status")
+                        .HasColumnType("tinyint");
+
+                    b.Property<Guid>("StudentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasAlternateKey("Id", "StudentId");
+
+                    b.HasIndex("CourseId", "StudentId")
+                        .IsUnique()
+                        .HasDatabaseName("UX_Enrollments_Active")
+                        .HasFilter("[Status] IN (0, 1)");
+
+                    b.HasIndex("StudentId", "Status");
+
+                    b.HasIndex("CourseId", "Status", "LastActivityAtUtc");
+
+                    b.HasIndex("CourseId", "Status", "RequestedAtUtc");
+
+                    b.ToTable("Enrollments", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_Enrollments_Status", "[Status] IN (0, 1, 2, 3, 4)");
+                        });
+                });
+
+            modelBuilder.Entity("ETutor.Domain.Files.StoredFile", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("datetime2(0)");
+
+                    b.Property<string>("OriginalFileName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<Guid>("OwnerUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<byte>("Purpose")
+                        .HasColumnType("tinyint");
+
+                    b.Property<byte[]>("Sha256")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("binary(32)")
+                        .IsFixedLength();
+
+                    b.Property<long>("SizeBytes")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("StorageKey")
+                        .IsRequired()
+                        .HasMaxLength(400)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(400)");
+
+                    b.Property<string>("StorageProvider")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .IsUnicode(false)
+                        .HasColumnType("varchar(20)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OwnerUserId");
+
+                    b.HasIndex("StorageKey")
+                        .IsUnique();
+
+                    b.ToTable("StoredFiles", (string)null);
+                });
+
             modelBuilder.Entity("ETutor.Domain.Users.RefreshToken", b =>
                 {
                     b.Property<Guid>("Id")
@@ -3167,6 +3506,128 @@ namespace ETutor.Infrastructure.Persistence.Migrations
                     b.Navigation("Subject");
                 });
 
+            modelBuilder.Entity("ETutor.Domain.Content.Course", b =>
+                {
+                    b.HasOne("ETutor.Domain.Catalog.Curriculum", "Curriculum")
+                        .WithMany()
+                        .HasForeignKey("CurriculumId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ETutor.Domain.Catalog.Subject", "Subject")
+                        .WithMany()
+                        .HasForeignKey("SubjectId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ETutor.Domain.Users.TeacherProfile", "Teacher")
+                        .WithMany()
+                        .HasForeignKey("TeacherId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ETutor.Domain.Catalog.AcademicYear", "AcademicYear")
+                        .WithMany()
+                        .HasForeignKey("AcademicYearId", "CurriculumId")
+                        .HasPrincipalKey("Id", "CurriculumId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ETutor.Domain.Catalog.GradeLevel", "GradeLevel")
+                        .WithMany()
+                        .HasForeignKey("GradeLevelId", "CurriculumId")
+                        .HasPrincipalKey("Id", "CurriculumId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ETutor.Domain.Catalog.GradeSubject", null)
+                        .WithMany()
+                        .HasForeignKey("GradeLevelId", "SubjectId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("AcademicYear");
+
+                    b.Navigation("Curriculum");
+
+                    b.Navigation("GradeLevel");
+
+                    b.Navigation("Subject");
+
+                    b.Navigation("Teacher");
+                });
+
+            modelBuilder.Entity("ETutor.Domain.Content.Lesson", b =>
+                {
+                    b.HasOne("ETutor.Domain.Content.Unit", "Unit")
+                        .WithMany("Lessons")
+                        .HasForeignKey("UnitId", "CourseId")
+                        .HasPrincipalKey("Id", "CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasAnnotation("ETutor:IntentionalCascade", true);
+
+                    b.Navigation("Unit");
+                });
+
+            modelBuilder.Entity("ETutor.Domain.Content.LessonResource", b =>
+                {
+                    b.HasOne("ETutor.Domain.Files.StoredFile", "File")
+                        .WithMany()
+                        .HasForeignKey("FileId");
+
+                    b.HasOne("ETutor.Domain.Content.Lesson", "Lesson")
+                        .WithMany("Resources")
+                        .HasForeignKey("LessonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasAnnotation("ETutor:IntentionalCascade", true);
+
+                    b.Navigation("File");
+
+                    b.Navigation("Lesson");
+                });
+
+            modelBuilder.Entity("ETutor.Domain.Content.Unit", b =>
+                {
+                    b.HasOne("ETutor.Domain.Content.Course", "Course")
+                        .WithMany("Units")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasAnnotation("ETutor:IntentionalCascade", true);
+
+                    b.Navigation("Course");
+                });
+
+            modelBuilder.Entity("ETutor.Domain.Enrollments.Enrollment", b =>
+                {
+                    b.HasOne("ETutor.Domain.Content.Course", "Course")
+                        .WithMany()
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ETutor.Domain.Users.StudentProfile", "Student")
+                        .WithMany()
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Course");
+
+                    b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("ETutor.Domain.Files.StoredFile", b =>
+                {
+                    b.HasOne("ETutor.Infrastructure.Identity.ApplicationUser", null)
+                        .WithMany()
+                        .HasForeignKey("OwnerUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("ETutor.Domain.Users.RefreshToken", b =>
                 {
                     b.HasOne("ETutor.Infrastructure.Identity.ApplicationUser", null)
@@ -3334,6 +3795,21 @@ namespace ETutor.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("ETutor.Domain.Catalog.Subject", b =>
                 {
                     b.Navigation("GradeLevels");
+                });
+
+            modelBuilder.Entity("ETutor.Domain.Content.Course", b =>
+                {
+                    b.Navigation("Units");
+                });
+
+            modelBuilder.Entity("ETutor.Domain.Content.Lesson", b =>
+                {
+                    b.Navigation("Resources");
+                });
+
+            modelBuilder.Entity("ETutor.Domain.Content.Unit", b =>
+                {
+                    b.Navigation("Lessons");
                 });
 
             modelBuilder.Entity("ETutor.Domain.Users.StudentProfile", b =>

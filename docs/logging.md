@@ -51,3 +51,12 @@ or personal data beyond opaque IDs. The request logger records the path without 
 | 2003 | `auth.refresh.reuse_detected` | Warning (user ID, token family) |
 | 2004 | `auth.refresh.rejected` | Information (reason) |
 | 2005 | `auth.logout` | Information (token family) |
+
+## Backend enrollment events (3000–3099)
+
+| EventId | Name | Level |
+|---|---|---|
+| 3000 | `enrollment.requested` | Information (enrollment, course IDs) |
+| 3001 | `enrollment.duplicate_request` | Information (course ID) |
+| 3002 | `enrollment.decided` | Information (enrollment ID, new status) |
+| 1005 | `request.concurrency_conflict` | Warning (method, path) |

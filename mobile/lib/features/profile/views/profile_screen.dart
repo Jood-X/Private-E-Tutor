@@ -3,17 +3,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/routes.dart';
-import '../../../design_system/components/app_state_views.dart';
 import '../../../design_system/tokens/app_colors.dart';
 import '../../../design_system/tokens/app_dimensions.dart';
 import '../../../l10n/generated/app_localizations.dart';
 import '../../auth/controllers/session_cubit.dart';
 import '../../auth/models/app_user.dart';
 
-/// Signed-in landing screen. Courses, schedule and progress arrive in later phases; for now it shows
-/// the user's profile and the teacher verification status.
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+/// The Profile tab for both roles: who is signed in, teacher verification status, settings and sign-out.
+class ProfileScreen extends StatelessWidget {
+  const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -49,8 +47,6 @@ class HomeScreen extends StatelessWidget {
               _VerificationBanner(teacher: teacher),
               const SizedBox(height: AppSpacing.lg),
             ],
-            AppEmptyState(message: l10n.homeComingSoon, icon: Icons.menu_book_outlined),
-            const SizedBox(height: AppSpacing.xl),
             Text(l10n.profileTitle, style: textTheme.titleLarge),
             const SizedBox(height: AppSpacing.sm),
             _ProfileCard(user: user),

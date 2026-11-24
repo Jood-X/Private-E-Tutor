@@ -292,10 +292,6 @@
   "@homeTeacherVerified": {
     "description": "Banner for verified teachers."
   },
-  "homeComingSoon": "Your courses and lessons will appear here.",
-  "@homeComingSoon": {
-    "description": "Empty state on home until courses exist."
-  },
   "profileTitle": "Your profile",
   "@profileTitle": {
     "description": "Profile section title."
@@ -319,5 +315,434 @@
   "splashSignInInstead": "Sign in again",
   "@splashSignInInstead": {
     "description": "Option on the splash error."
+  },
+  "navLearning": "My learning",
+  "@navLearning": {
+    "description": "Bottom navigation: student home."
+  },
+  "navDiscover": "Discover",
+  "@navDiscover": {
+    "description": "Bottom navigation: find teachers."
+  },
+  "navProfile": "Profile",
+  "@navProfile": {
+    "description": "Bottom navigation: profile."
+  },
+  "navCourses": "Courses",
+  "@navCourses": {
+    "description": "Bottom navigation: teacher courses."
+  },
+  "navRequests": "Requests",
+  "@navRequests": {
+    "description": "Bottom navigation: enrollment requests."
+  },
+  "statusDraft": "Draft",
+  "@statusDraft": {
+    "description": "Content status."
+  },
+  "statusPublished": "Published",
+  "@statusPublished": {
+    "description": "Content status."
+  },
+  "statusArchived": "Archived",
+  "@statusArchived": {
+    "description": "Content status."
+  },
+  "enrollmentPending": "Pending",
+  "@enrollmentPending": {
+    "description": "Enrollment status."
+  },
+  "enrollmentApproved": "Enrolled",
+  "@enrollmentApproved": {
+    "description": "Enrollment status."
+  },
+  "enrollmentRejected": "Declined",
+  "@enrollmentRejected": {
+    "description": "Enrollment status."
+  },
+  "enrollmentWithdrawn": "Withdrawn",
+  "@enrollmentWithdrawn": {
+    "description": "Enrollment status."
+  },
+  "enrollmentRevoked": "Removed",
+  "@enrollmentRevoked": {
+    "description": "Enrollment status."
+  },
+  "actionSave": "Save",
+  "@actionSave": {
+    "description": "Save button."
+  },
+  "actionCancel": "Cancel",
+  "@actionCancel": {
+    "description": "Cancel button."
+  },
+  "actionDelete": "Delete",
+  "@actionDelete": {
+    "description": "Delete action."
+  },
+  "actionPublish": "Publish",
+  "@actionPublish": {
+    "description": "Publish action."
+  },
+  "actionUnpublish": "Move to draft",
+  "@actionUnpublish": {
+    "description": "Unpublish action."
+  },
+  "actionArchive": "Archive",
+  "@actionArchive": {
+    "description": "Archive action."
+  },
+  "actionAdd": "Add",
+  "@actionAdd": {
+    "description": "Generic add button in dialogs."
+  },
+  "savedMessage": "Saved",
+  "@savedMessage": {
+    "description": "Confirmation after saving."
+  },
+  "teacherCoursesTitle": "My courses",
+  "@teacherCoursesTitle": {
+    "description": "Teacher courses screen title."
+  },
+  "teacherCoursesEmpty": "You haven't created a course yet.",
+  "@teacherCoursesEmpty": {
+    "description": "Empty state."
+  },
+  "newCourse": "New course",
+  "@newCourse": {
+    "description": "Button to create a course."
+  },
+  "courseCounts": "Units: {units} · Lessons: {lessons}",
+  "@courseCounts": {
+    "description": "Course summary counts.",
+    "placeholders": {
+      "units": {
+        "type": "int"
+      },
+      "lessons": {
+        "type": "int"
+      }
+    }
+  },
+  "courseWaiting": "{count} waiting",
+  "@courseWaiting": {
+    "description": "Pending requests badge.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "courseStudents": "Students: {count}",
+  "@courseStudents": {
+    "description": "Approved students count.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "createCourseTitle": "Create a course",
+  "@createCourseTitle": {
+    "description": "Create course screen title."
+  },
+  "fieldCourseTitle": "Course title",
+  "@fieldCourseTitle": {
+    "description": "Field label."
+  },
+  "fieldDescription": "Description",
+  "@fieldDescription": {
+    "description": "Field label."
+  },
+  "fieldContentLanguage": "Teaching language",
+  "@fieldContentLanguage": {
+    "description": "Field label."
+  },
+  "languageEnglish": "English",
+  "@languageEnglish": {
+    "description": "Teaching language option."
+  },
+  "languageArabic": "Arabic",
+  "@languageArabic": {
+    "description": "Teaching language option."
+  },
+  "createCourseCta": "Create course",
+  "@createCourseCta": {
+    "description": "Submit button."
+  },
+  "catalogPlacementHint": "Curriculum, grade and subject can't be changed after the course is created.",
+  "@catalogPlacementHint": {
+    "description": "Helper text."
+  },
+  "editorUnits": "Units",
+  "@editorUnits": {
+    "description": "Section title."
+  },
+  "addUnit": "Add unit",
+  "@addUnit": {
+    "description": "Button."
+  },
+  "addLesson": "Add lesson",
+  "@addLesson": {
+    "description": "Button."
+  },
+  "fieldUnitTitle": "Unit title",
+  "@fieldUnitTitle": {
+    "description": "Field label."
+  },
+  "fieldLessonTitle": "Lesson title",
+  "@fieldLessonTitle": {
+    "description": "Field label."
+  },
+  "editorEmptyUnits": "Add your first unit to start building the course.",
+  "@editorEmptyUnits": {
+    "description": "Empty state."
+  },
+  "editorNoLessons": "No lessons yet.",
+  "@editorNoLessons": {
+    "description": "Empty unit."
+  },
+  "publishCourse": "Publish course",
+  "@publishCourse": {
+    "description": "Button."
+  },
+  "courseDraftHint": "Students can't find this course until you publish it.",
+  "@courseDraftHint": {
+    "description": "Banner on draft courses."
+  },
+  "confirmDelete": "Delete \"{title}\"? This cannot be undone.",
+  "@confirmDelete": {
+    "description": "Delete confirmation.",
+    "placeholders": {
+      "title": {
+        "type": "String",
+        "example": "Unit 1"
+      }
+    }
+  },
+  "lessonEditorTitle": "Edit lesson",
+  "@lessonEditorTitle": {
+    "description": "Screen title."
+  },
+  "fieldSummary": "Summary",
+  "@fieldSummary": {
+    "description": "Field label."
+  },
+  "fieldNotes": "Lesson notes",
+  "@fieldNotes": {
+    "description": "Field label."
+  },
+  "fieldMinutes": "Estimated minutes",
+  "@fieldMinutes": {
+    "description": "Field label."
+  },
+  "resourcesTitle": "Resources",
+  "@resourcesTitle": {
+    "description": "Section title."
+  },
+  "addLink": "Add link",
+  "@addLink": {
+    "description": "Button."
+  },
+  "fieldLinkTitle": "Link title",
+  "@fieldLinkTitle": {
+    "description": "Field label."
+  },
+  "fieldUrl": "Address (https://…)",
+  "@fieldUrl": {
+    "description": "Field label."
+  },
+  "resourcesEmpty": "No resources yet.",
+  "@resourcesEmpty": {
+    "description": "Empty state."
+  },
+  "pdfUploadSoon": "Uploading PDFs from the app is coming soon.",
+  "@pdfUploadSoon": {
+    "description": "Info note."
+  },
+  "resourceDocument": "PDF document",
+  "@resourceDocument": {
+    "description": "Resource type."
+  },
+  "resourceLink": "Link",
+  "@resourceLink": {
+    "description": "Resource type."
+  },
+  "resourceRequired": "Required",
+  "@resourceRequired": {
+    "description": "Required resource tag."
+  },
+  "requestsTitle": "Enrollment requests",
+  "@requestsTitle": {
+    "description": "Screen title."
+  },
+  "tabPending": "Pending",
+  "@tabPending": {
+    "description": "Tab."
+  },
+  "tabStudents": "Students",
+  "@tabStudents": {
+    "description": "Tab."
+  },
+  "requestsEmpty": "No pending requests.",
+  "@requestsEmpty": {
+    "description": "Empty state."
+  },
+  "studentsEmpty": "No students yet.",
+  "@studentsEmpty": {
+    "description": "Empty state."
+  },
+  "actionApprove": "Approve",
+  "@actionApprove": {
+    "description": "Button."
+  },
+  "actionReject": "Decline",
+  "@actionReject": {
+    "description": "Button."
+  },
+  "actionRevoke": "Remove",
+  "@actionRevoke": {
+    "description": "Button."
+  },
+  "decisionNoteLabel": "Note to the student (optional)",
+  "@decisionNoteLabel": {
+    "description": "Field label."
+  },
+  "confirmRevoke": "Remove this student from the course?",
+  "@confirmRevoke": {
+    "description": "Confirmation."
+  },
+  "discoverTitle": "Find a teacher",
+  "@discoverTitle": {
+    "description": "Screen title."
+  },
+  "searchHint": "Search by name or topic",
+  "@searchHint": {
+    "description": "Search field hint."
+  },
+  "allSubjects": "All subjects",
+  "@allSubjects": {
+    "description": "Filter chip."
+  },
+  "discoverEmpty": "No teachers match yet. Try another subject.",
+  "@discoverEmpty": {
+    "description": "Empty state."
+  },
+  "requestToJoin": "Request to join",
+  "@requestToJoin": {
+    "description": "Button."
+  },
+  "requestMessageLabel": "Message to the teacher (optional)",
+  "@requestMessageLabel": {
+    "description": "Field label."
+  },
+  "sendRequest": "Send request",
+  "@sendRequest": {
+    "description": "Button."
+  },
+  "requestSent": "Request sent. You can start once the teacher approves.",
+  "@requestSent": {
+    "description": "Confirmation."
+  },
+  "notAccepting": "Not accepting new students right now",
+  "@notAccepting": {
+    "description": "Teacher status."
+  },
+  "myLearningEmpty": "You haven't joined a course yet. Find a teacher to get started.",
+  "@myLearningEmpty": {
+    "description": "Empty state."
+  },
+  "actionWithdraw": "Withdraw",
+  "@actionWithdraw": {
+    "description": "Button."
+  },
+  "confirmWithdraw": "Withdraw from this course?",
+  "@confirmWithdraw": {
+    "description": "Confirmation."
+  },
+  "coursePendingInfo": "Your request is waiting for the teacher's approval.",
+  "@coursePendingInfo": {
+    "description": "Info banner."
+  },
+  "courseLockedInfo": "Join this course to see its lessons.",
+  "@courseLockedInfo": {
+    "description": "Info banner."
+  },
+  "byTeacher": "with {name}",
+  "@byTeacher": {
+    "description": "Course teacher line.",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Khaled"
+      }
+    }
+  },
+  "lessonMinutes": "{minutes} min",
+  "@lessonMinutes": {
+    "description": "Lesson duration.",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "actionOpen": "Open",
+  "@actionOpen": {
+    "description": "Open a link."
+  },
+  "pdfViewerSoon": "Viewing PDFs in the app is coming soon.",
+  "@pdfViewerSoon": {
+    "description": "Info note."
+  },
+  "decisionNoteFromTeacher": "Teacher's note: {note}",
+  "@decisionNoteFromTeacher": {
+    "description": "Shown on declined/removed enrollments.",
+    "placeholders": {
+      "note": {
+        "type": "String",
+        "example": "Course full"
+      }
+    }
+  },
+  "errorAlreadyRequested": "You already asked to join this course.",
+  "@errorAlreadyRequested": {
+    "description": "enrollment.already_requested"
+  },
+  "errorNotAccepting": "This teacher isn't accepting new students right now.",
+  "@errorNotAccepting": {
+    "description": "enrollment.not_accepting_students"
+  },
+  "errorNoPublishedLesson": "Publish at least one lesson in a published unit first.",
+  "@errorNoPublishedLesson": {
+    "description": "course.no_published_lesson"
+  },
+  "errorHasStudents": "This course has students. Archive it instead.",
+  "@errorHasStudents": {
+    "description": "course.has_students"
+  },
+  "errorOnlyDraftDelete": "Only drafts can be deleted. Archive published content instead.",
+  "@errorOnlyDraftDelete": {
+    "description": "course.only_draft_can_be_deleted"
+  },
+  "errorInvalidLink": "Links must start with https://",
+  "@errorInvalidLink": {
+    "description": "course.invalid_link"
+  },
+  "errorConcurrency": "Someone else changed this just now. Refresh and try again.",
+  "@errorConcurrency": {
+    "description": "common.concurrency_conflict"
+  },
+  "errorInvalidCatalogSelection": "That grade and subject don't belong to this curriculum.",
+  "@errorInvalidCatalogSelection": {
+    "description": "course.invalid_catalog_selection"
+  },
+  "errorInvalidTransition": "That change isn't possible any more. Refresh to see the latest state.",
+  "@errorInvalidTransition": {
+    "description": "enrollment.invalid_transition"
+  },
+  "errorLinkOpen": "Couldn't open this link.",
+  "@errorLinkOpen": {
+    "description": "Snackbar when a lesson link cannot be opened."
   }
 }

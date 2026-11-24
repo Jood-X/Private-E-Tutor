@@ -31,7 +31,7 @@ void main() {
     expect(tester.getSize(logo), const Size(64, 64));
   });
 
-  testWidgets('student sign-up: 3 steps create the account and land on home', (tester) async {
+  testWidgets('student sign-up: 3 steps create the account and land on My learning', (tester) async {
     final app = await TestApp.pump(tester);
 
     await _tapText(tester, "I'm a student");
@@ -56,6 +56,8 @@ void main() {
     expect(sent.subjectIds, [2]);
     expect(sent.timeZoneId, 'Asia/Amman', reason: 'defaults to the chosen country');
     expect(sent.preferredLanguage, 'en');
+    expect(find.text("You haven't joined a course yet. Find a teacher to get started."), findsOneWidget);
+    await _tapText(tester, 'Profile');
     expect(find.text('Hello, Lina'), findsOneWidget);
     expect(app.tokens.current, tokensA);
   });
@@ -128,18 +130,22 @@ void main() {
     await _enter(tester, 'Password', 'Correct-horse-42');
     await _tapText(tester, 'Sign in');
 
-    // teacherUser prefers Arabic, so the app switches to Arabic (RTL).
+    // teacherUser prefers Arabic, so the app switches to Arabic (RTL), and teachers land on their courses.
+    expect(find.text('لم تنشئ أي مساق بعد.'), findsOneWidget);
+    await _tapText(tester, 'حسابي');
     expect(find.text('مرحبًا، Khaled'), findsOneWidget);
     expect(find.text('ملفك كمعلّم قيد المراجعة. لا يمكن للطلاب العثور عليك بعد.'), findsOneWidget);
   });
 
-  testWidgets('a saved session is restored to home, and sign-out returns to welcome', (tester) async {
+  testWidgets('a saved session is restored to the role home, and sign-out returns to welcome', (tester) async {
     final auth = FakeAuthRepository();
     final app = await TestApp.pump(tester, auth: auth, restoreSession: false);
     await app.tokens.save(tokensA);
     await app.session.restore();
     await tester.pumpAndSettle();
 
+    expect(find.text('My learning'), findsWidgets);
+    await _tapText(tester, 'Profile');
     expect(find.text('Hello, Lina'), findsOneWidget);
 
     await _tapText(tester, 'Sign out');

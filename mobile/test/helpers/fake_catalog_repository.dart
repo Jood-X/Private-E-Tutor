@@ -49,4 +49,8 @@ class FakeCatalogRepository implements CatalogRepository {
 
   @override
   Future<ApiResult<List<CatalogItem>>> getSubjects(int gradeLevelId) async => const ApiSuccess([mathematics, physics]);
+
+  @override
+  Future<ApiResult<List<CatalogItem>>> getAcademicYears(int curriculumId) async =>
+      const ApiSuccess([CatalogItem(id: 1, code: '2026/2027', name: '2026/2027')]);
 }

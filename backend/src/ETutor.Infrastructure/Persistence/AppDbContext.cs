@@ -1,6 +1,9 @@
 using ETutor.Application.Abstractions;
 using ETutor.Application.Common.Results;
 using ETutor.Domain.Catalog;
+using ETutor.Domain.Content;
+using ETutor.Domain.Enrollments;
+using ETutor.Domain.Files;
 using ETutor.Domain.Users;
 using ETutor.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
@@ -43,6 +46,18 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<StudentSubject> StudentSubjects => Set<StudentSubject>();
 
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
+
+    public DbSet<Course> Courses => Set<Course>();
+
+    public DbSet<Unit> Units => Set<Unit>();
+
+    public DbSet<Lesson> Lessons => Set<Lesson>();
+
+    public DbSet<LessonResource> LessonResources => Set<LessonResource>();
+
+    public DbSet<StoredFile> StoredFiles => Set<StoredFile>();
+
+    public DbSet<Enrollment> Enrollments => Set<Enrollment>();
 
     public async Task<Result<T>> ExecuteInTransactionAsync<T>(
         Func<CancellationToken, Task<Result<T>>> operation, CancellationToken cancellationToken)

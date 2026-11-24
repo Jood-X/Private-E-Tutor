@@ -40,5 +40,14 @@ String? messageForCode(String? code, AppLocalizations l10n) => switch (code) {
   'profile.grade_not_in_curriculum' ||
   'profile.stream_not_in_curriculum' ||
   'profile.subject_not_in_grade' => l10n.errorStudyPlanInvalid,
+  'enrollment.already_requested' => l10n.errorAlreadyRequested,
+  'enrollment.not_accepting_students' => l10n.errorNotAccepting,
+  'enrollment.invalid_transition' => l10n.errorInvalidTransition,
+  'course.no_published_lesson' => l10n.errorNoPublishedLesson,
+  'course.has_students' => l10n.errorHasStudents,
+  'course.only_draft_can_be_deleted' => l10n.errorOnlyDraftDelete,
+  'course.invalid_link' => l10n.errorInvalidLink,
+  'course.invalid_catalog_selection' => l10n.errorInvalidCatalogSelection,
+  'common.concurrency_conflict' => l10n.errorConcurrency,
   _ => null,
 };

@@ -20,6 +20,16 @@ internal sealed class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> log
             return true;
         }
 
+        if (exception is Microsoft.EntityFrameworkCore.DbUpdateConcurrencyException)
+        {
+            // Someone else changed the same record (row version mismatch): ask the client to reload.
+            LogMessages.ConcurrencyConflict(logger, httpContext.Request.Method, httpContext.Request.Path);
+            await ApiErrorWriter.WriteAsync(
+                httpContext, StatusCodes.Status409Conflict, ErrorCodes.Common.ConcurrencyConflict,
+                "This item was changed by someone else. Reload and try again.");
+            return true;
+        }
+
         if (exception is OperationCanceledException && httpContext.RequestAborted.IsCancellationRequested)
         {
             // The client disconnected; nobody is waiting for a response.

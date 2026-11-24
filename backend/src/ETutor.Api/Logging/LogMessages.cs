@@ -27,4 +27,8 @@ internal static partial class LogMessages
     [LoggerMessage(EventId = 1004, EventName = "request.bad_request", Level = LogLevel.Information,
         Message = "Malformed request rejected: {Reason}")]
     public static partial void BadRequest(ILogger logger, string reason);
+
+    [LoggerMessage(EventId = 1005, EventName = "request.concurrency_conflict", Level = LogLevel.Warning,
+        Message = "Concurrent update rejected for {Method} {Path}")]
+    public static partial void ConcurrencyConflict(ILogger logger, string method, string path);
 }

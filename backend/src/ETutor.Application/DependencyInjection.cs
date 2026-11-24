@@ -1,4 +1,8 @@
 using ETutor.Application.Catalog;
+using ETutor.Application.Courses;
+using ETutor.Application.Discovery;
+using ETutor.Application.Enrollments;
+using ETutor.Application.Learning;
 using ETutor.Application.Users;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,6 +22,15 @@ public static class DependencyInjection
         services.AddScoped<RegistrationService>();
         services.AddScoped<SessionService>();
         services.AddScoped<ProfileService>();
+
+        services.AddScoped<TeacherCourseService>();
+        services.AddScoped<CourseContentService>();
+        services.AddScoped<LessonQueries>();
+        services.AddScoped<LessonResourceService>();
+        services.AddScoped<EnrollmentService>();
+        services.AddScoped<TeacherEnrollmentService>();
+        services.AddScoped<DiscoveryService>();
+        services.AddScoped<LearningService>();
         return services;
     }
 }

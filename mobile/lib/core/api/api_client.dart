@@ -32,6 +32,8 @@ class ApiClient {
   Future<ApiResult<T>> put<T>(String path, Object? body, JsonDecoder<T> decode) =>
       _send(() => _dio.put<Object?>(path, data: body), decode);
 
+  Future<ApiResult<T>> delete<T>(String path, JsonDecoder<T> decode) => _send(() => _dio.delete<Object?>(path), decode);
+
   /// For endpoints that answer 204 No Content (no envelope).
   Future<ApiResult<void>> postNoContent(String path, Object? body) async {
     try {

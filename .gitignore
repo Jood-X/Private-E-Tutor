@@ -46,3 +46,6 @@ mobile/ios/Flutter/flutter_export_environment.sh
 # ---- Claude Code local state (launch.json is shared) ----
 .claude/*
 !.claude/launch.json
+
+# Uploaded files in development (never commit user content)
+backend/src/ETutor.Api/App_Data/

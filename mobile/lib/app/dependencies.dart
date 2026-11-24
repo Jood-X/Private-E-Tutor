@@ -15,12 +15,22 @@ import '../features/auth/controllers/study_details_cubit.dart';
 import '../features/auth/controllers/teacher_signup_cubit.dart';
 import '../features/auth/data/auth_api_repository.dart';
 import '../features/auth/models/auth_repository.dart';
+import '../features/content/models/content_models.dart';
+import '../features/learning/controllers/discover_cubit.dart';
+import '../features/learning/controllers/learning_cubits.dart';
+import '../features/learning/data/learning_api_repository.dart';
+import '../features/learning/models/learning_models.dart';
 import '../features/onboarding/controllers/curriculum_selection_cubit.dart';
 import '../features/onboarding/data/catalog_api_repository.dart';
 import '../features/onboarding/models/catalog_models.dart';
 import '../features/onboarding/models/catalog_repository.dart';
 import '../features/settings/controllers/language_cubit.dart';
 import '../features/settings/data/language_preferences.dart';
+import '../features/teaching/controllers/create_course_cubit.dart';
+import '../features/teaching/controllers/enrollment_requests_cubit.dart';
+import '../features/teaching/controllers/teacher_courses_cubit.dart';
+import '../features/teaching/data/teaching_api_repository.dart';
+import '../features/teaching/models/teaching_models.dart';
 
 /// Composition root: the only place that knows concrete implementations.
 ///
@@ -63,8 +73,50 @@ Future<GetIt> configureDependencies(AppConfig config, {GetIt? locator, TokenStor
     ..registerFactoryParam<StudyDetailsCubit, Curriculum, void>(
       (curriculum, _) => StudyDetailsCubit(repository: getIt(), curriculum: curriculum),
     );
+  registerContentControllers(
+    getIt,
+    teaching: TeachingApiRepository(getIt<ApiClient>()),
+    learning: LearningApiRepository(getIt<ApiClient>()),
+  );
 
   return getIt;
+}
+
+/// Teacher and student screen controllers. Shared with the widget-test harness, which passes fakes.
+void registerContentControllers(
+  GetIt getIt, {
+  required TeachingRepository teaching,
+  required LearningRepository learning,
+}) {
+  getIt
+    ..registerSingleton<TeachingRepository>(teaching)
+    ..registerSingleton<LearningRepository>(learning)
+    ..registerFactory(() => TeacherCoursesCubit(teaching))
+    ..registerFactoryParam<CreateCourseCubit, String, void>(
+      (countryCode, _) => CreateCourseCubit(catalog: getIt(), teaching: teaching, countryCode: countryCode),
+    )
+    ..registerFactoryParam<CourseEditorCubit, String, void>(
+      (courseId, _) => CourseEditorCubit(repository: teaching, courseId: courseId),
+    )
+    ..registerFactoryParam<LessonEditorCubit, String, void>(
+      (lessonId, _) => LessonEditorCubit(repository: teaching, lessonId: lessonId),
+    )
+    ..registerFactoryParam<EnrollmentListCubit, EnrollmentStatus, void>(
+      (status, _) => EnrollmentListCubit(repository: teaching, status: status),
+    )
+    ..registerFactory(() => MyLearningCubit(learning))
+    ..registerFactoryParam<DiscoverCubit, int?, void>(
+      (gradeLevelId, _) => DiscoverCubit(learning: learning, catalog: getIt(), gradeLevelId: gradeLevelId),
+    )
+    ..registerFactoryParam<TeacherProfileCubit, String, void>(
+      (teacherId, _) => TeacherProfileCubit(repository: learning, teacherId: teacherId),
+    )
+    ..registerFactoryParam<StudentCourseCubit, String, void>(
+      (courseId, _) => StudentCourseCubit(repository: learning, courseId: courseId),
+    )
+    ..registerFactoryParam<StudentLessonCubit, String, void>(
+      (lessonId, _) => StudentLessonCubit(repository: learning, lessonId: lessonId),
+    );
 }
 
 Future<RefreshOutcome> _refresh(AuthRepository repository, String refreshToken) async {

@@ -57,7 +57,7 @@ localized messages**; codes are never renamed once published. They're defined in
 | 403 | Authenticated but not allowed | `common.forbidden` |
 | 404 | Not found, **or exists but belongs to someone else** (prevents ID probing) | `common.not_found`, `catalog.country_not_found` |
 | 405 | Wrong HTTP method | `common.method_not_allowed` |
-| 409 | Conflict / concurrent modification | `auth.email_taken` |
+| 409 | Conflict / concurrent modification | `auth.email_taken`, `enrollment.already_requested`, `common.concurrency_conflict` |
 | 422 | Valid input that breaks a business rule | (later phases) |
 | 429 | Rate limited (`Retry-After` header set) | `common.rate_limited` |
 | 500 | Unexpected failure. Generic message only; no exception text, stack trace or SQL. | `common.unexpected` |
@@ -66,8 +66,8 @@ localized messages**; codes are never renamed once published. They're defined in
 
 * JSON uses camelCase; enums are serialized as strings; dates are ISO-8601 (`2026-08-23`); instants are UTC with `Z`.
 * Send `Accept-Language: en` or `ar`. Catalog names and fallback messages are localized; anything else falls back to English.
-* Collections that can grow are paginated (introduced with the first such endpoint) as
-  `data: { items, page, pageSize, totalCount, totalPages }`, with `page` from 1 and a server-capped `pageSize`.
+* Collections that can grow are paginated as `data: { items, page, pageSize, totalCount, totalPages }`.
+  Query `page` (from 1) and `pageSize` (default 20, max 50); out-of-range values are clamped, not rejected.
   The catalog is small and bounded, so it isn't paginated.
 * Entities are never serialized directly; every endpoint returns DTOs from `ETutor.Application`.
 
@@ -91,6 +91,28 @@ localized messages**; codes are never renamed once published. They're defined in
 | PUT | `/api/v1/me` | signed in | Update name, language, time zone, country |
 | PUT | `/api/v1/me/student` | Student role | Replace the study plan (curriculum, grade, stream, subjects) |
 | PUT | `/api/v1/me/teacher` | Teacher role | Update headline, bio, accepting-students flag |
+
+| GET | `/api/v1/teacher/courses` | Teacher | My courses with unit/lesson/request/student counts |
+| POST | `/api/v1/teacher/courses` | Teacher | Create a draft course (201) |
+| GET/PUT | `/api/v1/teacher/courses/{id}` | Teacher (owner) | Full outline / edit title, description, language |
+| PUT | `/api/v1/teacher/courses/{id}/status` | Teacher (owner) | Draft / Published / Archived (rules: D22) |
+| POST | `/api/v1/teacher/courses/{id}/units` | Teacher (owner) | Add a unit |
+| PUT, DELETE | `/api/v1/teacher/units/{id}` (+ `/status`, `/position`) | Teacher (owner) | Edit, change status, reorder, delete drafts |
+| POST | `/api/v1/teacher/units/{id}/lessons` | Teacher (owner) | Add a lesson |
+| GET, PUT, DELETE | `/api/v1/teacher/lessons/{id}` (+ `/status`, `/position`) | Teacher (owner) | Lesson detail, edit, status, reorder, delete drafts |
+| POST | `/api/v1/teacher/lessons/{id}/resources/link` | Teacher (owner) | Add an HTTPS link |
+| POST | `/api/v1/teacher/lessons/{id}/resources/document` | Teacher (owner) | Upload a PDF (multipart: `file`, `title`, `isRequired`; max 20 MB) |
+| DELETE | `/api/v1/teacher/resources/{id}` | Teacher (owner) | Remove a resource (and its file) |
+| GET | `/api/v1/teacher/enrollments?status=&courseId=&page=&pageSize=` | Teacher | Request queue and students (paginated) |
+| POST | `/api/v1/teacher/enrollments/{id}/approve` · `/reject` · `/revoke` | Teacher (owner) | Decide, with an optional note |
+| GET | `/api/v1/teachers?curriculumId=&gradeLevelId=&subjectId=&search=&page=&pageSize=` | Student | Discover verified teachers (paginated) |
+| GET | `/api/v1/teachers/{id}` | Student | Teacher profile, published courses and my enrollment status |
+| POST | `/api/v1/courses/{id}/enrollments` | Student | Request access (201; 409 if already requested) |
+| GET | `/api/v1/learning/enrollments` | Student | My enrollments |
+| POST | `/api/v1/learning/enrollments/{id}/withdraw` | Student (owner) | Withdraw a request or enrollment |
+| GET | `/api/v1/learning/courses/{id}` | Student | Course summary; outline only when approved |
+| GET | `/api/v1/learning/lessons/{id}` | Student (approved) | Lesson notes and resources |
+| GET | `/api/v1/resources/{id}/file` | Owner teacher or approved student | **File response** (not the envelope) |
 
 ### Authentication
 

@@ -16,6 +16,7 @@ public static class ErrorCodes
         public const string RateLimited = "common.rate_limited";
         public const string BadRequest = "common.bad_request";
         public const string Unexpected = "common.unexpected";
+        public const string ConcurrencyConflict = "common.concurrency_conflict";
     }
 
     public static class Auth
@@ -36,6 +37,36 @@ public static class ErrorCodes
         public const string GradeNotInCurriculum = "profile.grade_not_in_curriculum";
         public const string StreamNotInCurriculum = "profile.stream_not_in_curriculum";
         public const string SubjectNotInGrade = "profile.subject_not_in_grade";
+    }
+
+    public static class Course
+    {
+        public const string NotFound = "course.not_found";
+        public const string InvalidCatalogSelection = "course.invalid_catalog_selection";
+        public const string NoPublishedLesson = "course.no_published_lesson";
+        public const string HasStudents = "course.has_students";
+        public const string StatusChangeNotAllowed = "course.status_change_not_allowed";
+        public const string UnitNotFound = "course.unit_not_found";
+        public const string LessonNotFound = "course.lesson_not_found";
+        public const string ResourceNotFound = "course.resource_not_found";
+        public const string OnlyDraftCanBeDeleted = "course.only_draft_can_be_deleted";
+        public const string InvalidLink = "course.invalid_link";
+        public const string InvalidDocument = "course.invalid_document";
+        public const string DocumentTooLarge = "course.document_too_large";
+    }
+
+    public static class Enrollment
+    {
+        public const string NotFound = "enrollment.not_found";
+        public const string AlreadyRequested = "enrollment.already_requested";
+        public const string NotAcceptingStudents = "enrollment.not_accepting_students";
+        public const string InvalidTransition = "enrollment.invalid_transition";
+        public const string NotEnrolled = "enrollment.not_enrolled";
+    }
+
+    public static class Teacher
+    {
+        public const string NotFound = "teacher.not_found";
     }
 
     public static class Catalog

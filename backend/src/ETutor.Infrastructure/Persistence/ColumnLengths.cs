@@ -11,4 +11,9 @@ internal static class ColumnLengths
     public const int LanguageCode = 10;
     public const int Headline = 150;
     public const int Bio = 2000;
+    public const int Title = 200;
+    public const int ShortDescription = 2000;
+    public const int LongDescription = 4000;
+    public const int Url = 500;
+    public const int Note = 500;
 }

@@ -44,12 +44,24 @@ Living document: each phase updates the "Implemented" and "Open risks" sections.
 | Mobile: tokens in Android Keystore (flutter_secure_storage), never in logs (`AuthTokens.toString` redacted) | `SecureTokenStore` | `auth_interceptor_test` |
 | Mobile: one shared refresh for concurrent 401s (single-use tokens); network failure keeps the session | `AuthInterceptor` | `auth_interceptor_test` |
 
+## Implemented (Phase 3a)
+
+| Control | Where | Tested by |
+|---|---|---|
+| Ownership in every teacher query (other teachers' courses, units, lessons, resources, enrollments → 404) | `TeacherCourseService`, `CourseContentService`, `LessonResourceService`, `TeacherEnrollmentService` | `OtherTeachers_CannotReadOrChangeTheCourse`, `Teachers_CannotDecideOnAnotherTeachersEnrollments` |
+| One access rule for students (approved enrollment + published lesson/unit/course) | `LearningService.VisibleLessons` | `FullFlow_ContentIsHiddenUntilApproval…`, `RevokedStudents_LoseAccess…` |
+| Role policies on teacher and student endpoints | `Policies` | `Students_CannotUseTeacherEndpoints` |
+| Duplicate/concurrent enrollment requests blocked by a filtered unique index | `UX_Enrollments_Active` | `ConcurrentDuplicateRequests_CreateExactlyOneEnrollment` |
+| Concurrent edits rejected (row versions on courses and enrollments → 409) | `GlobalExceptionHandler` | — (mapping covered by code review) |
+| PDF uploads: size limit, signature check (not name/type), random storage keys, path-traversal guard, file name sanitized, orphan cleanup on DB failure | `LessonResourceService`, `LocalFileStorage` | `NonPdfFiles_AreRejected…`, `Documents_AreDownloadableOnly…` |
+| Downloads only for the owner teacher or approved students; `no-store` caching | `LearningService.OpenDocumentAsync`, `ResourcesController` | `Documents_AreDownloadableOnly…` |
+| Links restricted to absolute HTTPS URLs | `ContentRules.IsAllowedLink` | unit + integration tests |
+
 ## Planned (by phase)
 
 | Phase | Control |
 |---|---|
-| 3 | Resource-based authorization helpers (`teacher owns course`, `student has approved enrollment`). Cross-user access tests for every protected endpoint. |
-| 3–4 | File uploads: size/type allow-list, content sniffing, random storage keys, authorized download endpoint. |
+| 4 | Malware scanning of uploads before production; blob storage with private containers. |
 | 4 | Video playback details only for authorized users; YouTube API key server-side only. See the limitations below. |
 | 5 | Answer keys never in student DTOs; server-side scoring and timers. |
 | 6 | Booking ownership checks; DB-enforced slot reservations against double booking. |

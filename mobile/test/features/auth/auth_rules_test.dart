@@ -37,21 +37,39 @@ void main() {
 
   group('redirectFor', () {
     test('everything goes to the splash while the session is being checked', () {
-      expect(redirectFor(SessionStatus.restoring, AppRoutes.home), AppRoutes.splash);
+      expect(redirectFor(SessionStatus.restoring, AppRoutes.learning), AppRoutes.splash);
       expect(redirectFor(SessionStatus.unavailable, AppRoutes.welcome), AppRoutes.splash);
       expect(redirectFor(SessionStatus.restoring, AppRoutes.splash), isNull);
     });
 
     test('signed-out users cannot reach signed-in screens', () {
-      expect(redirectFor(SessionStatus.signedOut, AppRoutes.home), AppRoutes.welcome);
+      expect(redirectFor(SessionStatus.signedOut, AppRoutes.learning), AppRoutes.welcome);
+      expect(redirectFor(SessionStatus.signedOut, AppRoutes.courseEditor('c-1')), AppRoutes.welcome);
       expect(redirectFor(SessionStatus.signedOut, AppRoutes.studentDetails), isNull);
       expect(redirectFor(SessionStatus.signedOut, AppRoutes.settings), isNull);
     });
 
-    test('signed-in users skip sign-in and sign-up screens', () {
-      expect(redirectFor(SessionStatus.signedIn, AppRoutes.signIn), AppRoutes.home);
-      expect(redirectFor(SessionStatus.signedIn, AppRoutes.studentSignup), AppRoutes.home);
-      expect(redirectFor(SessionStatus.signedIn, AppRoutes.settings), isNull);
+    test('signed-in users skip sign-in screens and land on their role home', () {
+      expect(redirectFor(SessionStatus.signedIn, AppRoutes.signIn, role: UserRole.student), AppRoutes.learning);
+      expect(redirectFor(SessionStatus.signedIn, AppRoutes.splash, role: UserRole.teacher), AppRoutes.teacherCourses);
+      expect(
+        redirectFor(SessionStatus.signedIn, AppRoutes.studentSignup, role: UserRole.teacher),
+        AppRoutes.teacherCourses,
+      );
+      expect(redirectFor(SessionStatus.signedIn, AppRoutes.settings, role: UserRole.student), isNull);
+    });
+
+    test('each role stays in its own area', () {
+      expect(
+        redirectFor(SessionStatus.signedIn, AppRoutes.courseEditor('c-1'), role: UserRole.student),
+        AppRoutes.learning,
+      );
+      expect(
+        redirectFor(SessionStatus.signedIn, AppRoutes.teacherProfile('t-1'), role: UserRole.teacher),
+        AppRoutes.teacherCourses,
+      );
+      expect(redirectFor(SessionStatus.signedIn, AppRoutes.studentLesson('l-1'), role: UserRole.student), isNull);
+      expect(redirectFor(SessionStatus.signedIn, AppRoutes.newCourse, role: UserRole.teacher), isNull);
     });
   });
 
